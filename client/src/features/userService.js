@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = axios.create({ baseURL: "http://localhost:5000/api/user" });
+const API_URL = axios.create({
+  baseURL: "https://corisotoapi.onrender.com/api/user",
+});
 
 API_URL.interceptors.request.use((req) => {
   if (localStorage.getItem("user")) {
