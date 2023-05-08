@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   return (
     <div className="font-pop h-full w-full">
-      <h1 className="font-mont">Dashboard</h1>
+      <h1 className="font-mont">yes sir</h1>
 
       <div className="flex justify-around py-3 my-4 text-ter">
         <div className="flex-col w-5/12">
