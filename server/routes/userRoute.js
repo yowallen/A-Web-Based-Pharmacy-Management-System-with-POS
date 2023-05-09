@@ -22,6 +22,7 @@ router.get("/productcount", userController.getProductsCount);
 router.get("/getcategory", userController.getCategories);
 router.get("/getproduct", userController.getProducts);
 router.get("/topproducts", userController.getTopProductsByMonth);
+router.get("/lowquantity", userController.getLowQuantityProducts);
 router.post("/addproduct", userController.addProduct);
 router.post("/createsales", protect, userController.createSales);
 router.post("/addcategory", userController.addCategory);

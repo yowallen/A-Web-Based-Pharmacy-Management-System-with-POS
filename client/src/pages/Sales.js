@@ -5,32 +5,33 @@ import { FaCaretRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getMonthSales } from "../features/userSlice";
+import { getMonthSales, topProducts } from "../features/userSlice";
 
 export default function Sales() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [userData, setUserData] = useState({
-    labels: UserData.map((data) => data.month),
-    datasets: [
-      {
-        label: "Monthly Sales",
-        data: UserData.map((data) => data.userGain),
-        backgroundColor: ["#A6B1E1"],
-        borderColor: "#424874",
-        borderWidth: 2,
-      },
-    ],
-  });
+  // const [userData, setUserData] = useState({
+  //   labels: UserData.map((data) => data.month),
+  //   datasets: [
+  //     {
+  //       label: "Monthly Sales",
+  //       data: UserData.map((data) => data.userGain),
+  //       backgroundColor: ["#A6B1E1"],
+  //       borderColor: "#424874",
+  //       borderWidth: 2,
+  //     },
+  //   ],
+  // });
 
-  const { monthSales, user } = useSelector((state) => state.user);
+  const { monthSales, user, topProduct } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
     dispatch(getMonthSales());
+    dispatch(topProducts());
   }, [dispatch, getMonthSales, navigate]);
 
   const chartData = {
@@ -42,14 +43,31 @@ export default function Sales() {
         data: monthSales.map((sales) => sales.sales),
       },
       {
-        label: "Top Sale",
+        label: "Highest Sales",
         backgroundColor: "gold",
-        data: [65, 59, 80, 81, 56, 55, 40],
+        data: topProduct.map((product) => product.sales),
+        // Add a custom tooltip function to show the topProduct label
+        // alongside the sales data
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || "";
+              if (label) {
+                const topProductValue =
+                  topProduct[context.dataIndex]?.topProduct || "N/A";
+                return `${label}: ${context.formattedValue} (${topProductValue})`;
+              } else {
+                const topProductValue =
+                  topProduct[context.dataIndex]?.topProduct || "N/A";
+                return `${context.formattedValue} (${topProductValue})`;
+              }
+            },
+          },
+        },
       },
     ],
   };
 
-  console.log(monthSales);
   return (
     <div>
       <h1 className="font-mont flex items-center">

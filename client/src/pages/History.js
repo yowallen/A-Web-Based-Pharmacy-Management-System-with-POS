@@ -27,6 +27,32 @@ export default function History() {
       new Date(sale.createdAt).toISOString().slice(0, 7) === selectedMonth
   );
 
+  function downloadCSV() {
+    const rows = sortedSalesHistory.map((sale) => [
+      new Date(sale.createdAt).toLocaleDateString(),
+      sale.product,
+      sale.price,
+      sale.soldBy,
+    ]);
+
+    const filename = "sales_history";
+
+    if (Array.isArray(rows)) {
+      const csvContent =
+        "data:text/csv;charset=utf-8," +
+        rows.map((row) => row.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", filename + ".csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error("rows is not an array");
+    }
+  }
+
   return (
     <div>
       <h1 className="font-mont flex items-center">
@@ -57,6 +83,7 @@ export default function History() {
                   <th className="w-full">Date</th>
                   <th className="w-full">Product</th>
                   <th className="w-full">Amount</th>
+                  <th className="w-full">Sold by</th>
                 </tr>
                 {salesHistory &&
                   salesHistory.length > 0 &&
@@ -70,9 +97,11 @@ export default function History() {
                       </td>
                       <td className="w-full">{sale.product}</td>
                       <td className="w-full">{sale.price}</td>
+                      <td className="w-full">{sale.soldBy}</td>
                     </tr>
                   ))}
               </tbody>
+              <button onClick={downloadCSV}>Download CSV</button>
             </table>
           </div>
           <div className="flex justify-center items-center text-base gap-x-1">

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = axios.create({
-  baseURL: "https://corisotoapi.onrender.com/api/user",
+  baseURL: "http://localhost:5000/api/user",
 });
 
 API_URL.interceptors.request.use((req) => {
@@ -29,6 +29,8 @@ const productCount = () => API_URL.get("/productcount");
 const getProduct = () => API_URL.get("/getproduct");
 const getExpired = () => API_URL.get("/expiredproducts");
 const getMonthSales = () => API_URL.get("/monthsales");
+const topProducts = () => API_URL.get("/topproducts");
+const lowProducts = () => API_URL.get("/lowquantity");
 
 const addProduct = (productData) => API_URL.post("/addproduct", productData);
 const createSales = (payProducts) => API_URL.post("/createsales", payProducts);
@@ -68,6 +70,8 @@ const userAPI = {
   deleteCategory,
   updateProduct,
   deleteProduct,
+  topProducts,
+  lowProducts,
 };
 
 export default userAPI;

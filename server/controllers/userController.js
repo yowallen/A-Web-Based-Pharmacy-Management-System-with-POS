@@ -161,12 +161,16 @@ const addProduct = asyncHandler(async (req, res) => {
     throw new Error("Please fill all fields");
   }
 
-  //check if product already exists
-  const productExist = await Product.findOne({ productName });
+  // //check if product already exists
+  // Check if product already exists and is not expired
+  const productExist = await Product.findOne({
+    productName,
+    expiryDate: { $gt: new Date() },
+  });
 
   if (productExist) {
     res.status(400);
-    throw new Error("Product already exists");
+    throw new Error("Product already exists and is not yet expired");
   }
 
   //create new product
@@ -669,6 +673,15 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+//get products that have a low quantity
+const getLowQuantityProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({
+    quantity: { $lte: 5 },
+    isExpired: false,
+  }).sort({ createdAt: -1 });
+  res.json(products);
+});
+
 module.exports = {
   addUser,
   userLogin,
@@ -693,4 +706,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getTopProductsByMonth,
+  getLowQuantityProducts,
 };

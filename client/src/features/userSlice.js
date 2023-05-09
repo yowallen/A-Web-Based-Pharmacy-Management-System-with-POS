@@ -16,6 +16,8 @@ const initialState = {
   expiredProducts: [],
   monthSales: [],
   receipt: [],
+  topProduct: [],
+  lowProduct: [],
 };
 
 export const userLogin = createAsyncThunk(
@@ -225,6 +227,16 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+export const topProducts = createAsyncThunk("user/topproducts", async () => {
+  const response = await userService.topProducts();
+  return response.data;
+});
+
+export const lowProducts = createAsyncThunk("user/lowquantity", async () => {
+  const response = await userService.lowProducts();
+  return response.data;
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -313,6 +325,12 @@ const userSlice = createSlice({
         }
         return user;
       });
+    },
+    [topProducts.fulfilled]: (state, action) => {
+      state.topProduct = action.payload;
+    },
+    [lowProducts.fulfilled]: (state, action) => {
+      state.lowProduct = action.payload;
     },
   },
 });
