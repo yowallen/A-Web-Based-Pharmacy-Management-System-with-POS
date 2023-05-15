@@ -28,7 +28,7 @@ export default function PointOfSale() {
       price: product.price,
       quantity: product.quantity,
     },
-    label: product.productName,
+    label: `${product.productName}: stock(${product.quantity})`,
   }));
 
   const handleAddProduct = (event) => {
@@ -41,16 +41,38 @@ export default function PointOfSale() {
 
     if (value.quantity < quantityValue) {
       return toast.error(
-        `product quantity is ${value.quantity} and you are trying to sell ${quantityValue}`
+        `Product quantity is ${value.quantity} and you are trying to sell ${quantityValue}`
       );
     } else if (quantityValue > 0) {
-      const newProduct = {
-        id: value.id,
-        product: value.product,
-        price: value.price,
-        quantity: quantityValue,
-      };
-      setDisplayProducts([...displayProducts, newProduct]);
+      const existingProduct = displayProducts.find(
+        (product) => product.id === value.id
+      );
+
+      if (existingProduct) {
+        // Update the quantity of existing product
+        const updatedProducts = displayProducts.map((product) => {
+          if (product.id === value.id) {
+            return {
+              ...product,
+              quantity: product.quantity + parseInt(quantityValue),
+            };
+          }
+          return product;
+        });
+
+        setDisplayProducts(updatedProducts);
+      } else {
+        // Add a new product to displayProducts
+        const newProduct = {
+          id: value.id,
+          product: value.product,
+          price: value.price,
+          quantity: parseInt(quantityValue),
+        };
+
+        setDisplayProducts([...displayProducts, newProduct]);
+      }
+
       setPayProducts([
         ...payProducts,
         { productId: value.id, quantity: parseInt(quantityValue) },
@@ -81,6 +103,28 @@ export default function PointOfSale() {
   // Function to close the receipt modal
   const handleCloseReceiptModal = () => {
     setShowReceiptModal(false);
+  };
+
+  const handleEditQuantity = (productId) => {
+    // Find the product in the displayProducts array with the matching productId
+    const updatedProducts = displayProducts.map((product) => {
+      if (product.id === productId) {
+        const newQuantity = prompt("Enter the new quantity:");
+
+        const parsedQuantity = parseInt(newQuantity);
+        if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+          return product;
+        }
+
+        return {
+          ...product,
+          quantity: parsedQuantity,
+        };
+      }
+      return product;
+    });
+
+    setDisplayProducts(updatedProducts);
   };
 
   return (
@@ -128,6 +172,7 @@ export default function PointOfSale() {
                   <th className="w-full">Qty</th>
                   <th className="w-full">Price</th>
                   <th className="w-full">Amount</th>
+                  <th className="w-full">Edit Quantity</th>{" "}
                 </tr>
               </thead>
               <tbody>
@@ -141,6 +186,14 @@ export default function PointOfSale() {
                     <td className="w-full">{product.price}</td>
                     <td className="w-full">
                       {product.price * product.quantity}
+                    </td>
+                    <td className="w-full">
+                      <button
+                        onClick={() => handleEditQuantity(product.id)}
+                        className="text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))}

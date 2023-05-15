@@ -47,6 +47,10 @@ const productSchema = new mongoose.Schema(
     stockedAvailable: {
       type: Number,
     },
+    productLimit: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

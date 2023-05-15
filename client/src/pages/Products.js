@@ -21,6 +21,7 @@ export default function Products() {
     expiryDate: "",
     prescriptionRequired: false,
     quantity: 0,
+    productLimit: 0,
   });
 
   const {
@@ -33,6 +34,7 @@ export default function Products() {
     expiryDate,
     prescriptionRequired,
     quantity,
+    productLimit,
   } = productData;
 
   useEffect(() => {
@@ -65,14 +67,27 @@ export default function Products() {
       expiryDate: "",
       prescriptionRequired: false,
       quantity: 0,
+      productLimit: 0,
     });
     dispatch(getCategories());
   };
 
   const [search, setSearch] = useState("");
-  const filteredProducts = products.filter((product) =>
-    product.productName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProducts = products.filter((category) => {
+    if (search === "") {
+      return true; // Render all categories when search is empty
+    }
+
+    const categoryName = category.productName.toLowerCase();
+    const searchInput = search.toLowerCase();
+
+    if (categoryName.startsWith(searchInput)) {
+      return true; // Match if category name starts with the search input
+    }
+
+    const words = categoryName.split(" ");
+    return words.some((word) => word === searchInput); // Match if any word in category name is equal to the search input
+  });
 
   const label = "flex text-base font-mont font-medium pt-2";
   const input =
@@ -166,6 +181,18 @@ export default function Products() {
                         placeholder="Enter product quantity"
                         name="quantity"
                         value={quantity}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </div>
+
+                    <div className="flex-col">
+                      <label className={label}>Product Limit:</label>
+                      <input
+                        type="number"
+                        className={input}
+                        placeholder="Enter product quantity"
+                        name="productLimit"
+                        value={productLimit}
                         onChange={(e) => onChange(e)}
                       />
                     </div>
@@ -279,7 +306,11 @@ export default function Products() {
                   filteredProducts.map((product, index) => (
                     <tr
                       key={product._id}
-                      className="flex justify-between text-sm font-light text-center m-2"
+                      className={`flex justify-between text-sm font-light text-center m-2 ${
+                        product.quantity <= product.productLimit
+                          ? "bg-yellow-200"
+                          : ""
+                      }`}
                     >
                       <td className="w-full flex items-center justify-center">
                         {index + 1}
@@ -307,9 +338,9 @@ export default function Products() {
                           }}
                           className="py-1 px-2 bg-emerald-500 text-white rounded"
                         >
-                          Edit
+                          update
                         </button>
-                        <DeleteProduct productId={product._id} />
+                        {/* <DeleteProduct productId={product._id} /> */}
                       </td>
                     </tr>
                   ))}
@@ -328,7 +359,11 @@ export default function Products() {
         </div>
         {showProductModal && (
           <div className="mx-auto z-50 w-1/2 bg-white rounded-lg shadow-lg p-4">
-            <UpdateProduct product={prodcutToEdit} categories={categories} />
+            <UpdateProduct
+              product={prodcutToEdit}
+              categories={categories}
+              user={user.role}
+            />
             <button
               className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
               onClick={() => setShowProductModal(false)}

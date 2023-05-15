@@ -86,9 +86,21 @@ export default function ManageUsers() {
   };
 
   const [search, setSearch] = useState("");
-  const filteredUsers = users.filter((user) =>
-    user.fullName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers = users.filter((category) => {
+    if (search === "") {
+      return true; // Render all categories when search is empty
+    }
+
+    const categoryName = category.fullName.toLowerCase();
+    const searchInput = search.toLowerCase();
+
+    if (categoryName.startsWith(searchInput)) {
+      return true; // Match if category name starts with the search input
+    }
+
+    const words = categoryName.split(" ");
+    return words.some((word) => word === searchInput); // Match if any word in category name is equal to the search input
+  });
 
   return (
     <div>
@@ -204,6 +216,8 @@ export default function ManageUsers() {
               <input
                 type="text"
                 className="w-60 text-xs font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>

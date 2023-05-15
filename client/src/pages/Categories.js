@@ -39,9 +39,21 @@ export default function Categories() {
   };
 
   const [search, setSearch] = useState("");
-  const filteredCategories = categories.filter((category) =>
-    category.categoryName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredCategories = categories.filter((category) => {
+    if (search === "") {
+      return true; // Render all categories when search is empty
+    }
+
+    const categoryName = category.categoryName.toLowerCase();
+    const searchInput = search.toLowerCase();
+
+    if (categoryName.startsWith(searchInput)) {
+      return true; // Match if category name starts with the search input
+    }
+
+    const words = categoryName.split(" ");
+    return words.some((word) => word === searchInput); // Match if any word in category name is equal to the search input
+  });
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState(null);

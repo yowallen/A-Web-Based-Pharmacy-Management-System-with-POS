@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { sales } = useSelector((state) => state.user);
+  const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
   const { salesHistory, user } = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
@@ -18,22 +18,40 @@ export default function History() {
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getSales());
-  }, [getSales, dispatch, navigate, user, selectedMonth]);
+    setSelectedMonth(new Date().toISOString().slice(0, 7)); // Reset the selected month to the current month
+  }, [dispatch, navigate, user]);
 
-  //sort by months
-
-  const sortedSalesHistory = salesHistory.filter(
-    (sale) =>
-      new Date(sale.createdAt).toISOString().slice(0, 7) === selectedMonth
-  );
+  useEffect(() => {
+    // Filter the sales history based on the selected month
+    const filteredSalesHistory = salesHistory.filter((sale) => {
+      try {
+        const saleDate = new Date(sale.createdAt);
+        if (isNaN(saleDate.getTime())) {
+          // Invalid date, skip this sale
+          return false;
+        }
+        return saleDate.toISOString().slice(0, 7) === selectedMonth;
+      } catch (error) {
+        console.error("Error filtering sales history:", error);
+        return false;
+      }
+    });
+    setSortedSalesHistory(filteredSalesHistory);
+  }, [salesHistory, selectedMonth]); // Include sortedSalesHistory in the dependency array
 
   function downloadCSV() {
-    const rows = sortedSalesHistory.map((sale) => [
-      new Date(sale.createdAt).toLocaleDateString(),
-      sale.product,
-      sale.price,
-      sale.soldBy,
-    ]);
+    const total = sortedSalesHistory.reduce((acc, sale) => acc + sale.total, 0);
+
+    const rows = [
+      ["Date", "Product", "Amount", "Sold by"],
+      ...sortedSalesHistory.map((sale) => [
+        new Date(sale.createdAt).toLocaleDateString(),
+        sale.product,
+        sale.price,
+        sale.soldBy,
+      ]),
+      ["Total", "", total.toString(), ""],
+    ];
 
     const filename = "sales_history";
 
@@ -52,6 +70,8 @@ export default function History() {
       console.error("rows is not an array");
     }
   }
+
+  console.log(salesHistory);
 
   return (
     <div>
@@ -93,15 +113,26 @@ export default function History() {
                       className="flex justify-between text-sm font-light text-center"
                     >
                       <td className="w-full">
-                        {new Date(sale.createdAt).toLocaleDateString()}
+                        {sale.createdAt &&
+                          new Date(sale.createdAt).toLocaleDateString()}
                       </td>
                       <td className="w-full">{sale.product}</td>
-                      <td className="w-full">{sale.price}</td>
+                      <td className="w-full">{sale.total}</td>
                       <td className="w-full">{sale.soldBy}</td>
                     </tr>
                   ))}
+                {sortedSalesHistory.length > 0 && (
+                  <tr className="flex justify-center text-base font-medium">
+                    <td className="w-full" colSpan="4">
+                      Total:{" "}
+                      {sortedSalesHistory.reduce(
+                        (total, sale) => total + sale.total,
+                        0
+                      )}
+                    </td>
+                  </tr>
+                )}
               </tbody>
-              <button onClick={downloadCSV}>Download CSV</button>
             </table>
           </div>
           <div className="flex justify-center items-center text-base gap-x-1">
@@ -113,8 +144,16 @@ export default function History() {
               Next
             </button>
           </div>
+          <button onClick={downloadCSV}>Download file</button>
         </div>
       </div>
     </div>
   );
 }
+
+//sort by months
+
+// let sortedSalesHistory = salesHistory.filter(
+//   (sale) =>
+//     new Date(sale.createdAt).toISOString().slice(0, 7) === selectedMonth
+// );

@@ -145,6 +145,7 @@ const addProduct = asyncHandler(async (req, res) => {
     description,
     expiryDate,
     prescriptionRequired,
+    productLimit,
   } = req.body;
 
   if (
@@ -187,6 +188,7 @@ const addProduct = asyncHandler(async (req, res) => {
     stockedIn: quantity,
     stockedAvailable: quantity,
     isExpired: false,
+    productLimit,
   });
   if (product) {
     res.status(201).json({
@@ -201,6 +203,9 @@ const addProduct = asyncHandler(async (req, res) => {
       expiryDate: product.expiryDate,
       prescriptionRequired: product.prescriptionRequired,
       isExpired: product.isExpired,
+      stockedIn: product.stockedIn,
+      stockedAvailable: product.stockedAvailable,
+      productLimit: product.productLimit,
     });
   } else {
     res.status(400);
@@ -636,6 +641,10 @@ const updateProduct = asyncHandler(async (req, res) => {
   const productData = req.body;
   const { id } = req.params;
 
+  const existingProduct = await Product.findById(id);
+  const updatedQuantity =
+    existingProduct.quantity + parseInt(productData.quantity, 10);
+
   try {
     const updateProduct = await Product.findByIdAndUpdate(
       id,
@@ -644,7 +653,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         category: productData.category,
         productType: productData.productType,
         measurement: productData.measurement,
-        quantity: productData.quantity,
+        quantity: updatedQuantity,
         price: productData.price,
         description: productData.description,
         expiryDate: productData.expiryDate,
@@ -676,9 +685,12 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //get products that have a low quantity
 const getLowQuantityProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({
-    quantity: { $lte: 5 },
+    $expr: {
+      $lte: ["$quantity", "$productLimit"],
+    },
     isExpired: false,
   }).sort({ createdAt: -1 });
+
   res.json(products);
 });
 

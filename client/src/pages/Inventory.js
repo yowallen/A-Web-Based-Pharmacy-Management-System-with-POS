@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProducts } from "../features/userSlice";
 import { useEffect } from "react";
@@ -16,10 +16,23 @@ export default function Inventory() {
 
   console.log(products);
 
-  const [search, setSearch] = React.useState("");
-  const filteredProducts = products.filter((product) => {
-    return product.productName.toLowerCase().includes(search.toLowerCase());
+  const [search, setSearch] = useState("");
+  const filteredProducts = products.filter((category) => {
+    if (search === "") {
+      return true; // Render all categories when search is empty
+    }
+
+    const categoryName = category.productName.toLowerCase();
+    const searchInput = search.toLowerCase();
+
+    if (categoryName.startsWith(searchInput)) {
+      return true; // Match if category name starts with the search input
+    }
+
+    const words = categoryName.split(" ");
+    return words.some((word) => word === searchInput); // Match if any word in category name is equal to the search input
   });
+
   return (
     <div>
       <h1 className="font-mont">Inventory List</h1>
