@@ -174,7 +174,7 @@ export default function Dashboard() {
                   <div className="mt-2">
                     <p className="text-sm text-gray-500 mb-5">
                       Seems like you have some products that are low in
-                      quantity, please check your inventory.
+                      quantity, please check in the products tab.
                     </p>
                     <h2 className="font-bold">List</h2>
                     <ul>

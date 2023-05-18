@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getExpiredProducts } from "../features/userSlice";
+import { getProducts } from "../features/userSlice";
 
 export default function Expired() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, expiredProducts } = useSelector((state) => state.user);
+  const { user, products } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
-    dispatch(getExpiredProducts());
-  }, [(dispatch, navigate, getExpiredProducts)]);
-
-  console.log(expiredProducts);
+    dispatch(getProducts());
+  }, [(dispatch, navigate, getProducts)]);
 
   const [search, setSearch] = useState("");
-  const filteredProducts = expiredProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     return product.productName.toLowerCase().includes(search.toLowerCase());
   });
 
   return (
     <div>
-      <h1 className="font-mont">Expired List</h1>
+      <h1 className="font-mont">Batch List</h1>
       <div>
         <div className="flex-col">
           <div className="flex items-center justify-between py-2 font-normal text-sm">
-            <span>{`Showing 1 to ${filteredProducts.length} of ${expiredProducts.length} Entries`}</span>
+            <span>{`Showing 1 to ${filteredProducts.length} of ${products.length} Entries`}</span>
             <div className="flex gap-x-2 items-center">
               <label>Search:</label>
               <input
@@ -44,15 +42,15 @@ export default function Expired() {
               <thead>
                 <tr className="flex justify-between items-center text-lg text-center w-full">
                   <th className="w-full">#</th>
-                  <th className="w-full">Encoded</th>
-                  <th className="w-full">Expired</th>
+                  <th className="w-full">Updated Encoded</th>
+                  <th className="w-full">Expiration Date</th>
                   <th className="w-full">Product Info</th>
-                  <th className="w-full">Qty</th>
+                  <th className="w-full">Stock</th>
                 </tr>
               </thead>
               <tbody>
-                {expiredProducts &&
-                  expiredProducts.length >= 1 &&
+                {getProducts &&
+                  products.length >= 1 &&
                   filteredProducts.map((product, index) => (
                     <tr
                       key={product._id}
@@ -62,7 +60,10 @@ export default function Expired() {
                         {index + 1}
                       </td>
                       <td className="w-full">
-                        {new Date(product.createdAt).toDateString()}
+                        {new Date(product.updatedAt).toLocaleString("en-US", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
                       </td>
                       <td className="w-full">
                         {new Date(product.expiryDate).toLocaleDateString()}

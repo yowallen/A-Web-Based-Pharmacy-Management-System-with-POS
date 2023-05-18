@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = axios.create({
-  baseURL: "https://corisotoapi.onrender.com/api/user",
+  baseURL: "http://localhost:5000/api/user",
 });
 
 API_URL.interceptors.request.use((req) => {

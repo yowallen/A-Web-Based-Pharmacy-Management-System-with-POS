@@ -141,6 +141,7 @@ export default function PointOfSale() {
                 options={options}
                 value={selectedProducts}
                 onChange={handleProductChange}
+                isSearchable={true}
               />
             </div>
 

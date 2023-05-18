@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { addProduct, getCategories, getProducts } from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
-import DeleteProduct from "../components/DeleteProduct";
 
 export default function Products() {
   const navigate = useNavigate();

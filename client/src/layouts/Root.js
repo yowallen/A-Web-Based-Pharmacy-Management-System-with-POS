@@ -117,7 +117,7 @@ export default function Root() {
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
-                Expired List
+                Batch List
               </span>
             </NavLink>
 
