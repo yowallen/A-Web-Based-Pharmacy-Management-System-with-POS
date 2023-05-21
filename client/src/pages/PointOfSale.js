@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts, createSales } from "../features/userSlice";
 import { toast } from "react-hot-toast";
 import Reciept from "../components/Reciept";
+import { Dialog, Transition } from "@headlessui/react";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -13,6 +14,17 @@ export default function PointOfSale() {
   const [selectedProducts, setSelectedProducts] = useState();
   const [payProducts, setPayProducts] = useState([]);
   const [total, setTotal] = useState(0);
+  const [newQuantity, setNewQuantity] = useState();
+
+  let [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -44,21 +56,24 @@ export default function PointOfSale() {
         `Product quantity is ${value.quantity} and you are trying to sell ${quantityValue}`
       );
     } else if (quantityValue > 0) {
-      const existingProduct = displayProducts.find(
+      const existingProductIndex = displayProducts.findIndex(
         (product) => product.id === value.id
       );
 
-      if (existingProduct) {
-        // Update the quantity of existing product
-        const updatedProducts = displayProducts.map((product) => {
-          if (product.id === value.id) {
-            return {
-              ...product,
-              quantity: product.quantity + parseInt(quantityValue),
-            };
-          }
-          return product;
-        });
+      if (existingProductIndex !== -1) {
+        const existingQuantity = displayProducts[existingProductIndex].quantity;
+
+        // Check if the sum exceeds the available stock
+        if (existingQuantity + parseInt(quantityValue) > value.quantity) {
+          return toast.error(
+            `The total quantity exceeds the available stock of ${value.quantity}`
+          );
+        }
+
+        // Update the quantity of the existing product
+        const updatedProducts = [...displayProducts];
+        updatedProducts[existingProductIndex].quantity +=
+          parseInt(quantityValue);
 
         setDisplayProducts(updatedProducts);
       } else {
@@ -73,10 +88,34 @@ export default function PointOfSale() {
         setDisplayProducts([...displayProducts, newProduct]);
       }
 
-      setPayProducts([
-        ...payProducts,
-        { productId: value.id, quantity: parseInt(quantityValue) },
-      ]);
+      const existingPayProductIndex = payProducts.findIndex(
+        (product) => product.productId === value.id
+      );
+
+      if (existingPayProductIndex !== -1) {
+        const existingPayQuantity =
+          payProducts[existingPayProductIndex].quantity;
+
+        // Check if the sum exceeds the available stock
+        if (existingPayQuantity + parseInt(quantityValue) > value.quantity) {
+          return toast.error(
+            `The total quantity exceeds the available stock of ${value.quantity}`
+          );
+        }
+
+        // Update the quantity of the existing payProduct
+        const updatedPayProducts = [...payProducts];
+        updatedPayProducts[existingPayProductIndex].quantity +=
+          parseInt(quantityValue);
+
+        setPayProducts(updatedPayProducts);
+      } else {
+        // Add a new product to payProducts
+        setPayProducts([
+          ...payProducts,
+          { productId: value.id, quantity: parseInt(quantityValue) },
+        ]);
+      }
 
       const newTotal = total + value.price * quantityValue;
       setTotal(newTotal);
@@ -109,8 +148,6 @@ export default function PointOfSale() {
     // Find the product in the displayProducts array with the matching productId
     const updatedProducts = displayProducts.map((product) => {
       if (product.id === productId) {
-        const newQuantity = prompt("Enter the new quantity:");
-
         const parsedQuantity = parseInt(newQuantity);
         if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
           return product;
@@ -123,7 +160,7 @@ export default function PointOfSale() {
       }
       return product;
     });
-
+    toast.success("product Updated");
     setDisplayProducts(updatedProducts);
   };
 
@@ -178,25 +215,97 @@ export default function PointOfSale() {
               </thead>
               <tbody>
                 {displayProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="flex justify-between text-sm font-light text-center"
-                  >
-                    <td className="w-full">{product.product}</td>
-                    <td className="w-full">{product.quantity}</td>
-                    <td className="w-full">{product.price}</td>
-                    <td className="w-full">
-                      {product.price * product.quantity}
-                    </td>
-                    <td className="w-full">
-                      <button
-                        onClick={() => handleEditQuantity(product.id)}
-                        className="text-blue-500 hover:underline"
+                  <>
+                    <tr
+                      key={product.id}
+                      className="flex justify-between text-sm font-light text-center"
+                    >
+                      <td className="w-full">{product.product}</td>
+                      <td className="w-full">{product.quantity}</td>
+                      <td className="w-full">{product.price}</td>
+                      <td className="w-full">
+                        {product.price * product.quantity}
+                      </td>
+                      <td className="w-full">
+                        <button
+                          onClick={openModal}
+                          className="text-blue-500 hover:underline"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                    <Transition appear show={isOpen} as={Fragment}>
+                      <Dialog
+                        as="div"
+                        className="relative z-10"
+                        onClose={closeModal}
                       >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0"
+                          enterTo="opacity-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
+                          <div className="fixed inset-0 bg-black bg-opacity-25" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 overflow-y-auto">
+                          <div className="flex min-h-full items-center justify-center p-4 text-center">
+                            <Transition.Child
+                              as={Fragment}
+                              enter="ease-out duration-300"
+                              enterFrom="opacity-0 scale-95"
+                              enterTo="opacity-100 scale-100"
+                              leave="ease-in duration-200"
+                              leaveFrom="opacity-100 scale-100"
+                              leaveTo="opacity-0 scale-95"
+                            >
+                              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Title
+                                  as="h3"
+                                  className="text-lg font-medium leading-6 text-gray-900"
+                                >
+                                  Update Quantity
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                  <input
+                                    type="number"
+                                    value={newQuantity}
+                                    onChange={(e) =>
+                                      setNewQuantity(e.target.value)
+                                    }
+                                  />
+                                </div>
+
+                                <div className="mt-4">
+                                  <button
+                                    type="button"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                    onClick={() =>
+                                      handleEditQuantity(product.id)
+                                    }
+                                  >
+                                    Update
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                    onClick={() => closeModal()}
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              </Dialog.Panel>
+                            </Transition.Child>
+                          </div>
+                        </div>
+                      </Dialog>
+                    </Transition>
+                  </>
                 ))}
               </tbody>
             </table>

@@ -54,6 +54,12 @@ export default function Products() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (quantity === 0 || quantity < productLimit) {
+      toast.error(
+        "Quantity must be greater than 0 or greater than product limit"
+      );
+      return;
+    }
     dispatch(addProduct({ productData, toast }));
     setShowModal(false);
     setProductData({
@@ -182,6 +188,11 @@ export default function Products() {
                         value={quantity}
                         onChange={(e) => onChange(e)}
                       />
+                      {quantity === 0 && (
+                        <p className="text-red-900 text-[15px]">
+                          must be greater than 0 or greater that product limit
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-col">
