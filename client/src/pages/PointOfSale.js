@@ -137,6 +137,7 @@ export default function PointOfSale() {
     setShowReceiptModal(true);
     setDisplayProducts([]);
     setPayProducts([]);
+    dispatch(getProducts());
   };
 
   // Function to close the receipt modal
