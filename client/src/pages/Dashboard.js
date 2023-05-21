@@ -1,6 +1,6 @@
-import React, { useEffect, Fragment, useState } from "react";
-import { Link } from "react-router-dom";
-import { Dialog, Transition } from "@headlessui/react";
+import React, {useEffect, Fragment, useState} from "react";
+import {Link} from "react-router-dom";
+import {Dialog, Transition} from "@headlessui/react";
 import {
   FaShoppingBag,
   FaChartBar,
@@ -8,6 +8,8 @@ import {
   FaArrowCircleRight,
   FaHistory,
 } from "react-icons/fa";
+import {TiWarning} from "react-icons/ti";
+import {TbCurrencyPeso} from "react-icons/tb";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
@@ -15,9 +17,8 @@ import {
   topProducts,
   lowProducts,
 } from "../features/userSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-// const { data, error } = useFetch("http://localhost:8000/proxyData");
+import {useSelector, useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ export default function Dashboard() {
     dispatch(lowProducts());
   }, [dispatch, navigate]);
 
-  const { salesToday, salesCountToday, productsCount, user, lowProduct } =
+  const {salesToday, salesCountToday, productsCount, user, lowProduct} =
     useSelector((state) => state.user);
 
   useEffect(() => {
@@ -65,9 +66,12 @@ export default function Dashboard() {
             <span>Total Sales</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.totalSales}</p>)}
             {error && <p>{error}</p>} */}
-            <p>{salesToday}</p>
+            <p className="flex items-center">
+              <TbCurrencyPeso />
+              {salesToday}
+            </p>
             <span className="flex justify-end">
-              <FaChartBar style={{ fontSize: "6rem", color: "#b45309" }} />
+              <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
             </span>
           </div>
           <div className="bg-amber-700 font-normal text-base">
@@ -87,7 +91,7 @@ export default function Dashboard() {
             {error && <p>{error}</p>} */}
             <p>{salesCountToday}</p>
             <span className="flex justify-end">
-              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
+              <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
             </span>
           </div>
           <div className="bg-emerald-800 font-normal text-base">
@@ -109,7 +113,7 @@ export default function Dashboard() {
             {error && <p>{error}</p>} */}
             <p>{productsCount}</p>
             <span className="flex justify-end">
-              <FaShoppingBag style={{ fontSize: "6rem", color: "#0369a1" }} />
+              <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
             </span>
           </div>
           <div className="bg-sky-700 font-normal text-base">
@@ -126,7 +130,7 @@ export default function Dashboard() {
           <div className={`${card} bg-red-500`}>
             <span>Order History</span>
             <span className="flex justify-end">
-              <FaHistory style={{ fontSize: "8.1rem", color: "#991b1b" }} />
+              <FaHistory style={{fontSize: "8.1rem", color: "#991b1b"}} />
             </span>
           </div>
           <div className="bg-red-800 font-normal text-base">
@@ -167,8 +171,11 @@ export default function Dashboard() {
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-x-1"
                   >
+                    <span className="text-yellow-400 text-3xl">
+                      <TiWarning />
+                    </span>
                     Product Low in Quantity
                   </Dialog.Title>
                   <div className="mt-2">
@@ -176,12 +183,18 @@ export default function Dashboard() {
                       Seems like you have some products that are low in
                       quantity, please check in the products tab.
                     </p>
-                    <h2 className="font-bold">List</h2>
                     <ul>
                       {lowProduct &&
                         lowProduct.map((product) => (
-                          <li>
-                            {product.productName} quantity: {product.quantity}
+                          <li className="pb-1">
+                            <i className="font-bold text-lg">
+                              {product.productName}
+                            </i>{" "}
+                            only has{" "}
+                            <strong className="font-bold text-red-500 text-lg">
+                              {product.quantity}
+                            </strong>{" "}
+                            left in stock.
                           </li>
                         ))}
                     </ul>

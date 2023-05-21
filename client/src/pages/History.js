@@ -1,16 +1,17 @@
-import { FaCaretRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { getSales } from "../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {FaCaretRight} from "react-icons/fa";
+import {Link} from "react-router-dom";
+import {getSales} from "../features/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
-  const { salesHistory, user } = useSelector((state) => state.user);
+  const {salesHistory, user} = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
@@ -87,14 +88,36 @@ export default function History() {
       <div>
         <h2 className="text-lg mt-6">Order History - Report Data</h2>
         <div className="flex-col">
-          <div className="flex items-center gap-x-2 py-3">
-            <span className="text-base font-medium">Sort by: </span>
-            <input
-              className="w-40 text-xs font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
-              type="month"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-            />
+          <div className="flex items-center justify-between pb-4">
+            <div>
+              <span className="text-base font-medium">Sort by: </span>
+              <input
+                className="w-40 text-xs font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              />
+            </div>
+
+            {sortedSalesHistory.length > 0 && (
+              <div className=" flex items-center border-2 border-prime rounded px-3 py-1 text-lg text-gray-700">
+                Total Amount:{" "}
+                <p className="flex items-center">
+                  <TbCurrencyPeso />
+                  {sortedSalesHistory.reduce(
+                    (total, sale) => total + sale.total,
+                    0
+                  )}
+                </p>
+              </div>
+            )}
+
+            <button
+              onClick={downloadCSV}
+              className="bg-prime text-white px-4 py-2 rounded text-sm font-medium hover:bg-sec"
+            >
+              Download file
+            </button>
           </div>
           <div className="flex h-full">
             <table className="w-full border-2 border-acsent">
@@ -121,30 +144,9 @@ export default function History() {
                       <td className="w-full">{sale.soldBy}</td>
                     </tr>
                   ))}
-                {sortedSalesHistory.length > 0 && (
-                  <tr className="flex justify-center text-base font-medium">
-                    <td className="w-full" colSpan="4">
-                      Total:{" "}
-                      {sortedSalesHistory.reduce(
-                        (total, sale) => total + sale.total,
-                        0
-                      )}
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center items-center text-base gap-x-1">
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Previous
-            </button>
-            <span className="bg-prime px-2 py-1 rounded text-white">0</span>
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Next
-            </button>
-          </div>
-          <button onClick={downloadCSV}>Download file</button>
         </div>
       </div>
     </div>

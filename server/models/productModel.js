@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     measurement: {
-      type: Number,
+      type: String,
       required: true,
     },
     quantity: {
@@ -24,7 +24,6 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     price: {
       type: Number,

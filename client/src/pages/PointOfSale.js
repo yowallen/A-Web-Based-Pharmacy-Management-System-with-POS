@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts, createSales } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getProducts, createSales} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 import Reciept from "../components/Reciept";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function PointOfSale() {
     dispatch(getProducts());
   }, [dispatch, navigate]);
 
-  const { products, user, receipt } = useSelector((state) => state.user);
+  const {products, user, receipt} = useSelector((state) => state.user);
 
   const options = products.map((product) => ({
     value: {
@@ -36,8 +37,8 @@ export default function PointOfSale() {
 
     if (!selectedProducts) return toast.error("Please select a product");
 
-    const { value } = selectedProducts;
-    const { value: quantityValue } = event.target.quantity;
+    const {value} = selectedProducts;
+    const {value: quantityValue} = event.target.quantity;
 
     if (value.quantity < quantityValue) {
       return toast.error(
@@ -75,7 +76,7 @@ export default function PointOfSale() {
 
       setPayProducts([
         ...payProducts,
-        { productId: value.id, quantity: parseInt(quantityValue) },
+        {productId: value.id, quantity: parseInt(quantityValue)},
       ]);
 
       const newTotal = total + value.price * quantityValue;
@@ -94,7 +95,7 @@ export default function PointOfSale() {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   const handlePay = () => {
-    dispatch(createSales({ payProducts, toast }));
+    dispatch(createSales({payProducts, toast}));
     setShowReceiptModal(true);
     setDisplayProducts([]);
     setPayProducts([]);
@@ -142,6 +143,7 @@ export default function PointOfSale() {
                 value={selectedProducts}
                 onChange={handleProductChange}
                 isSearchable={true}
+                placeholder="Search or Select Product"
               />
             </div>
 
@@ -167,31 +169,33 @@ export default function PointOfSale() {
         <div className="flex-col">
           <div className="flex h-full">
             <table className="w-full border-2 border-acsent">
-              <thead>
-                <tr className="flex justify-between items-center text-lg text-center w-full">
-                  <th className="w-full">Product</th>
-                  <th className="w-full">Qty</th>
-                  <th className="w-full">Price</th>
-                  <th className="w-full">Amount</th>
-                  <th className="w-full">Edit Quantity</th>{" "}
+              <thead className="bg-prime">
+                <tr className="text-white text-lg">
+                  <th className="tracking-wide text-left">Amount</th>
+                  <th className="tracking-wide text-left">Product</th>
+                  <th className="tracking-wide text-left">Price</th>
+                  <th className="tracking-wide text-left">Qty</th>
+                  <th className="tracking-wide text-left">
+                    Edit Quantity
+                  </th>{" "}
                 </tr>
               </thead>
               <tbody>
                 {displayProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="flex justify-between text-sm font-light text-center"
-                  >
-                    <td className="w-full">{product.product}</td>
-                    <td className="w-full">{product.quantity}</td>
-                    <td className="w-full">{product.price}</td>
-                    <td className="w-full">
-                      {product.price * product.quantity}
+                  <tr key={product.id} className="text-base font-medium">
+                    <td className="p-3">
+                      <p className="flex items-center">
+                        <TbCurrencyPeso />
+                        {product.price * product.quantity}
+                      </p>
                     </td>
-                    <td className="w-full">
+                    <td className="p-3">{product.product}</td>
+                    <td className="p-3">{product.price}</td>
+                    <td className="p-3">{product.quantity}</td>
+                    <td className="p-3">
                       <button
                         onClick={() => handleEditQuantity(product.id)}
-                        className="text-blue-500 hover:underline"
+                        className="bg-sky-500 text-white py-1 px-3 rounded"
                       >
                         Edit
                       </button>
@@ -201,19 +205,22 @@ export default function PointOfSale() {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center items-center text-base gap-x-1">
-            <span className="bg-prime px-2 py-1 rounded text-white">
+          <div className="flex justify-between items-center text-base pt-2">
+            <span className="border-2 border-prime px-2 py-1 rounded text-prime flex items-center">
               Total:
-              {displayProducts.reduce(
-                (total, product) => total + product.price * product.quantity,
-                0
-              )}
+              <strong className="text-lg pl-1 flex items-center">
+                <TbCurrencyPeso />
+                {displayProducts.reduce(
+                  (total, product) => total + product.price * product.quantity,
+                  0
+                )}
+              </strong>
             </span>
             <button
               onClick={handlePay}
-              className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent"
+              className="bg-prime text-white py-2 px-4 rounded hover:bg-sec"
             >
-              Pay
+              Pay Now
             </button>
           </div>
         </div>

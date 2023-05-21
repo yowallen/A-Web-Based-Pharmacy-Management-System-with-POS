@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect} from "react";
 import BarChart from "../components/BarChart";
-import { UserData } from "../components/Data";
-import { FaCaretRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getMonthSales, topProducts } from "../features/userSlice";
+import {FaCaretRight} from "react-icons/fa";
+import {Link} from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {getMonthSales, topProducts} from "../features/userSlice";
 
 export default function Sales() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const [userData, setUserData] = useState({
-  //   labels: UserData.map((data) => data.month),
-  //   datasets: [
-  //     {
-  //       label: "Monthly Sales",
-  //       data: UserData.map((data) => data.userGain),
-  //       backgroundColor: ["#A6B1E1"],
-  //       borderColor: "#424874",
-  //       borderWidth: 2,
-  //     },
-  //   ],
-  // });
-
-  const { monthSales, user, topProduct } = useSelector((state) => state.user);
+  const {monthSales, user, topProduct} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) {

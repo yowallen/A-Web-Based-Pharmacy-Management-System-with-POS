@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateProduct } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {updateProduct} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 
-const UpdateProduct = ({ product, categories, user }) => {
+const UpdateProduct = ({product, categories, user}) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -95,7 +95,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             measurement:
           </label>
           <input
-            type="number"
+            type="text"
             id="measurement"
             value={measurement}
             onChange={handleChange}

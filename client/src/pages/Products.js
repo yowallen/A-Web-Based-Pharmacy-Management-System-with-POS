@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { addProduct, getCategories, getProducts } from "../features/userSlice";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
+import DataTable from "../components/ProductsTable";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const { user, categories, products } = useSelector((state) => state.user);
+  const {user, categories, products} = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -54,7 +55,7 @@ export default function Products() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addProduct({ productData, toast }));
+    dispatch(addProduct({productData, toast}));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -93,20 +94,26 @@ export default function Products() {
     "w-full text-sm font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded";
 
   const [showProductModal, setShowProductModal] = useState(false);
+  const handleModal = () => {
+    setProductToEdit(products);
+    setShowProductModal(true);
+  };
   return (
     <div className="w-full h-full">
-      <h1 className="font-mont">Products</h1>
-      <button
-        className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
-        type="button"
-        onClick={() => setShowModal(true)}
-      >
-        + Add Product
-      </button>
+      <div className="flex items-center justify-between">
+        <h1 className="font-mont">Product List</h1>
+        <button
+          className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
+          type="button"
+          onClick={() => setShowModal(true)}
+        >
+          + Add Product
+        </button>
+      </div>
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
-            <div className="relative w-auto my-6 mx-auto w-96">
+            <div className="relative my-6 mx-auto basis-1/2">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
@@ -203,7 +210,7 @@ export default function Products() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{ resize: "none" }}
+                        style={{resize: "none"}}
                         name="description"
                         value={description}
                         onChange={(e) => onChange(e)}
@@ -271,107 +278,28 @@ export default function Products() {
         </>
       ) : null}
 
-      <div>
-        <h2 className="text-xl mt-6">Manage Products</h2>
-        <div className="flex-col">
-          <div className="flex items-center justify-between py-2 font-normal text-sm">
-            <span>{`Showing 1 to ${filteredProducts.length} of ${products.length} Entries`}</span>
-            <div className="flex gap-x-2 items-center">
-              <label>Search:</label>
-              <input
-                type="text"
-                className="w-60 text-xs font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </div>
-          </div>
+      <DataTable
+        data={filteredProducts}
+        search={search}
+        setSearch={setSearch}
+        handleModal={handleModal}
+      />
 
-          <div className="flex h-full">
-            <table className="w-full border-2 border-acsent">
-              <thead>
-                <tr className="flex justify-between items-center text-lg text-center w-full">
-                  <th className="w-full">#</th>
-                  <th className="w-full">Product Info</th>
-                  <th className="w-full">Type</th>
-                  <th className="w-full">Qty</th>
-                  <th className="w-full">Price</th>
-                  <th className="w-full">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products &&
-                  products.length >= 1 &&
-                  filteredProducts.map((product, index) => (
-                    <tr
-                      key={product._id}
-                      className={`flex justify-between text-sm font-light text-center m-2 ${
-                        product.quantity <= product.productLimit
-                          ? "bg-yellow-200"
-                          : ""
-                      }`}
-                    >
-                      <td className="w-full flex items-center justify-center">
-                        {index + 1}
-                      </td>
-                      <td className="w-full flex-col">
-                        <span className="w-full flex">SKU:</span>
-                        <span className="w-full flex">
-                          Category: {product.category}
-                        </span>
-                        <span className="w-full flex">
-                          Name: {product.productName}
-                        </span>
-                        <span className="w-full flex">
-                          Description: {product.description}
-                        </span>
-                      </td>
-                      <td className="w-full">{product.productType}</td>
-                      <td className="w-full">{product.quantity}</td>
-                      <td className="w-full">{product.price}</td>
-                      <td className="w-full">
-                        <button
-                          onClick={() => {
-                            setProductToEdit(product);
-                            setShowProductModal(true);
-                          }}
-                          className="py-1 px-2 bg-emerald-500 text-white rounded"
-                        >
-                          update
-                        </button>
-                        {/* <DeleteProduct productId={product._id} /> */}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-center items-center text-base gap-x-1">
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Previous
-            </button>
-            <span className="bg-prime px-2 py-1 rounded text-white">0</span>
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Next
-            </button>
-          </div>
+      {showProductModal && (
+        <div className="mx-auto z-50 w-1/2 bg-white rounded-lg shadow-lg p-4">
+          <UpdateProduct
+            product={prodcutToEdit}
+            categories={categories}
+            user={user.role}
+          />
+          <button
+            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
+            onClick={() => setShowProductModal(false)}
+          >
+            Close
+          </button>
         </div>
-        {showProductModal && (
-          <div className="mx-auto z-50 w-1/2 bg-white rounded-lg shadow-lg p-4">
-            <UpdateProduct
-              product={prodcutToEdit}
-              categories={categories}
-              user={user.role}
-            />
-            <button
-              className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
-              onClick={() => setShowProductModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
