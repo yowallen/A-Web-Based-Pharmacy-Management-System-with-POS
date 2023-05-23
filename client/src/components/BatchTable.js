@@ -38,7 +38,6 @@ const BatchTable = ({data, search, setSearch}) => {
             <div>{row.productName}</div>
           </div>
         ),
-      sortable: true,
     },
     {
       name: "Encoded",

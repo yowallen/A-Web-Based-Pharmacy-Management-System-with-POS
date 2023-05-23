@@ -6,6 +6,7 @@ import {getProducts, createSales} from "../features/userSlice";
 import {toast} from "react-hot-toast";
 import Reciept from "../components/Reciept";
 import {TbCurrencyPeso} from "react-icons/tb";
+import PaymentModal from "../components/PaymentModal";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function PointOfSale() {
   const [selectedProducts, setSelectedProducts] = useState();
   const [payProducts, setPayProducts] = useState([]);
   const [total, setTotal] = useState(0);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -99,6 +101,7 @@ export default function PointOfSale() {
     setShowReceiptModal(true);
     setDisplayProducts([]);
     setPayProducts([]);
+    setShowPaymentModal(false);
   };
 
   // Function to close the receipt modal
@@ -217,7 +220,7 @@ export default function PointOfSale() {
               </strong>
             </span>
             <button
-              onClick={handlePay}
+              onClick={() => setShowPaymentModal(true)}
               className="bg-prime text-white py-2 px-4 rounded hover:bg-sec"
             >
               Pay Now
@@ -225,6 +228,15 @@ export default function PointOfSale() {
           </div>
         </div>
       </div>
+
+      {showPaymentModal && (
+        <PaymentModal
+          showPaymentModal={showPaymentModal}
+          setShowPaymentModal={setShowPaymentModal}
+          handlePay={handlePay}
+        />
+      )}
+
       {showReceiptModal && (
         <Reciept sale={receipt} closeModal={handleCloseReceiptModal} />
       )}
