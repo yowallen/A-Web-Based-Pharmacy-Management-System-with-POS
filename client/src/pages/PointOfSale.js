@@ -6,6 +6,7 @@ import { getProducts, createSales } from "../features/userSlice";
 import { toast } from "react-hot-toast";
 import Reciept from "../components/Reciept";
 import { Dialog, Transition } from "@headlessui/react";
+import { TbCurrencyPeso } from "react-icons/tb";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
