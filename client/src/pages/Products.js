@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {toast} from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
-import {addProduct, getCategories, getProducts} from "../features/userSlice";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { addProduct, getCategories, getProducts } from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -43,7 +43,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const {user, categories, products} = useSelector((state) => state.user);
+  const { user, categories, products } = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -55,7 +55,13 @@ export default function Products() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addProduct({productData, toast}));
+    if (quantity === 0 || quantity < productLimit) {
+      toast.error(
+        "Quantity must be greater than 0 or greater than product limit"
+      );
+      return;
+    }
+    dispatch(addProduct({ productData, toast }));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -189,6 +195,11 @@ export default function Products() {
                         value={quantity}
                         onChange={(e) => onChange(e)}
                       />
+                      {quantity === 0 && (
+                        <p className="text-red-900 text-[15px]">
+                          must be greater than 0 or greater that product limit
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-col">
@@ -210,7 +221,7 @@ export default function Products() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{resize: "none"}}
+                        style={{ resize: "none" }}
                         name="description"
                         value={description}
                         onChange={(e) => onChange(e)}
