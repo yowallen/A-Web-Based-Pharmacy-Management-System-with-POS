@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addUser, allUser } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {addUser, allUser} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 import UpdateUser from "../components/UpdateUser";
-
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {BiSearchAlt} from "react-icons/bi";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 export default function ManageUsers() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function ManageUsers() {
     setPassType("password");
   };
 
-  const { user, users } = useSelector((state) => state.user);
+  const {user, users} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) {
@@ -63,7 +63,7 @@ export default function ManageUsers() {
     role: "",
   });
 
-  const { fullName, userName, password, role } = userData;
+  const {fullName, userName, password, role} = userData;
 
   const onChange = (e) => {
     setUserData({
@@ -75,7 +75,7 @@ export default function ManageUsers() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addUser({ userData, toast }));
+    dispatch(addUser({userData, toast}));
     setShowModal(false);
     setUserData({
       fullName: "",
@@ -104,18 +104,20 @@ export default function ManageUsers() {
 
   return (
     <div>
-      <h1 className="font-mont">Manage Users</h1>
-      <button
-        className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
-        type="button"
-        onClick={() => setShowModal(true)}
-      >
-        + Add User
-      </button>
+      <div className="flex items-center justify-between">
+        <h1 className="font-mont">Manage Users</h1>
+        <button
+          className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
+          type="button"
+          onClick={() => setShowModal(true)}
+        >
+          + Add User
+        </button>
+      </div>
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
-            <div className="relative w-auto my-6 mx-auto w-96">
+            <div className="relative my-6 mx-auto basis-1/3">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
@@ -207,25 +209,24 @@ export default function ManageUsers() {
       ) : null}
 
       <div>
-        <h2 className="text-xl mt-6">Manage Categories</h2>
         <div className="flex-col">
           <div className="flex items-center justify-between py-2 font-normal text-sm">
-            <span>Showing 1 to 1 of 1 Entries</span>
             <div className="flex gap-x-2 items-center">
-              <label>Search:</label>
+              <BiSearchAlt className="w-8 h-8" />
               <input
                 type="text"
-                className="w-60 text-xs font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
+                className="w-60 text-sm font-normal p-2 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search User"
               />
             </div>
           </div>
 
           <div className="flex h-full">
             <table className="w-full border-2 border-acsent">
-              <thead>
-                <tr className="flex justify-between items-center text-lg text-center w-full">
+              <thead className="bg-prime">
+                <tr className="flex justify-between items-center text-lg text-center w-full text-white">
                   <th className="w-full">#</th>
                   <th className="w-full">Full Name</th>
                   <th className="w-full">Username</th>
@@ -258,15 +259,6 @@ export default function ManageUsers() {
                   ))}
               </tbody>
             </table>
-          </div>
-          <div className="flex justify-center items-center text-base gap-x-1">
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Previous
-            </button>
-            <span className="bg-prime px-2 py-1 rounded text-white">0</span>
-            <button className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent">
-              Next
-            </button>
           </div>
         </div>
         {selectedUserId && (

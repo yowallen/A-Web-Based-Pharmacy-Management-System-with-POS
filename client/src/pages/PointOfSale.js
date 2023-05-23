@@ -180,6 +180,7 @@ export default function PointOfSale() {
                 value={selectedProducts}
                 onChange={handleProductChange}
                 isSearchable={true}
+                placeholder="Search or Select Product"
               />
             </div>
 
@@ -205,13 +206,15 @@ export default function PointOfSale() {
         <div className="flex-col">
           <div className="flex h-full">
             <table className="w-full border-2 border-acsent">
-              <thead>
-                <tr className="flex justify-between items-center text-lg text-center w-full">
-                  <th className="w-full">Product</th>
-                  <th className="w-full">Qty</th>
-                  <th className="w-full">Price</th>
-                  <th className="w-full">Amount</th>
-                  <th className="w-full">Edit Quantity</th>{" "}
+              <thead className="bg-prime">
+                <tr className="text-white text-lg">
+                  <th className="tracking-wide text-left">Amount</th>
+                  <th className="tracking-wide text-left">Product</th>
+                  <th className="tracking-wide text-left">Price</th>
+                  <th className="tracking-wide text-left">Qty</th>
+                  <th className="tracking-wide text-left">
+                    Edit Quantity
+                  </th>{" "}
                 </tr>
               </thead>
               <tbody>
@@ -311,19 +314,22 @@ export default function PointOfSale() {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center items-center text-base gap-x-1">
-            <span className="bg-prime px-2 py-1 rounded text-white">
+          <div className="flex justify-between items-center text-base pt-2">
+            <span className="border-2 border-prime px-2 py-1 rounded text-prime flex items-center">
               Total:
-              {displayProducts.reduce(
-                (total, product) => total + product.price * product.quantity,
-                0
-              )}
+              <strong className="text-lg pl-1 flex items-center">
+                <TbCurrencyPeso />
+                {displayProducts.reduce(
+                  (total, product) => total + product.price * product.quantity,
+                  0
+                )}
+              </strong>
             </span>
             <button
               onClick={handlePay}
-              className="border-2 py-1 px-2 rounded border-sec hover:bg-acsent"
+              className="bg-prime text-white py-2 px-4 rounded hover:bg-sec"
             >
-              Pay
+              Pay Now
             </button>
           </div>
         </div>

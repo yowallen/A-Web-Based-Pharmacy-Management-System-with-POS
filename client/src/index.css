@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .active {
-  @apply bg-sec text-prime;
+  @apply bg-acsent text-prime;
 }
 
 body {

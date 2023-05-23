@@ -1,6 +1,6 @@
 import controlKey from "../assets/control-key.svg";
 import userLogo from "../assets/userLogo.svg";
-import { BiLogOutCircle } from "react-icons/bi";
+import {BiLogOutCircle} from "react-icons/bi";
 import {
   FaThLarge,
   FaPrescriptionBottleAlt,
@@ -10,22 +10,22 @@ import {
   FaExclamationTriangle,
   FaCoins,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { userLogout } from "../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {useEffect, useState} from "react";
+import {Outlet, NavLink} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {userLogout} from "../features/userSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function Root() {
   const [openNav, setOpenNav] = useState(true);
   const navLink = `flex items-center font-pop text-acsent py-3 hover:bg-sec hover:text-prime px-2 gap-x-4 rounded-md ${
     !openNav && "justify-center"
   }`;
-  const iconStyle = { fontSize: "24px" };
+  const iconStyle = {fontSize: "24px"};
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.user);
+  const {user} = useSelector((state) => state.user);
 
   const handleOut = () => {
     dispatch(userLogout());
@@ -59,11 +59,11 @@ export default function Root() {
               className="w-12 rounded-2xl bg-ter p-1 border-sec border-4"
             />
             <h1
-              className={`font-mont font-medium text-acsent text-xl origin-left duration-300 ${
-                !openNav && "scale-0"
+              className={`font-mont font-extrabold text-acsent text-xl origin-left duration-300 ${
+                !openNav && "hidden"
               }`}
             >
-              Staff / Admin
+              {user && user.fullName} ({user && user.role})
             </h1>
           </div>
           <div className={`my-48 ${!openNav && ""}`}>
@@ -117,7 +117,7 @@ export default function Root() {
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
-                Batch List
+                Supply List
               </span>
             </NavLink>
 
@@ -135,7 +135,7 @@ export default function Root() {
               onClick={handleOut}
               className=" flex items-center justify-center w-full gap-x-1 text-lg font-bold border border-sec py-1 hover:bg-sec rounded"
             >
-              <BiLogOutCircle style={{ fontSize: "1.5rem" }} />
+              <BiLogOutCircle style={{fontSize: "1.5rem"}} />
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
