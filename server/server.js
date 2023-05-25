@@ -6,8 +6,8 @@ const morgran = require("morgan");
 const conn = require("./config/database");
 const colors = require("colors");
 const cron = require("node-cron");
-const checkExpiredProductsController = require("./controllers/userController");
-const expiredController = checkExpiredProductsController.checkExpiredProducts;
+// const checkExpiredProductsController = require("./controllers/userController");
+// const expiredController = checkExpiredProductsController.checkExpiredProducts;
 
 const { handleError } = require("./middlewares/errorHandler");
 
@@ -27,9 +27,9 @@ app.use(express.json({ extended: true }));
 app.use("/api/user", userRoute);
 
 // Schedule the expired product checking function to run every day at midnight
-cron.schedule("0 0 * * *", () => {
-  expiredController();
-});
+// cron.schedule("0 0 * * *", () => {
+//   expiredController();
+// });
 
 // cron.schedule("22 1 * * *", () => {
 //   expiredController();

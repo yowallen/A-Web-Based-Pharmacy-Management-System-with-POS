@@ -257,22 +257,22 @@ const getCategories = asyncHandler(async (req, res) => {
 });
 
 //set expired
-async function checkExpiredProducts() {
-  const currentDate = new Date();
-  const expiredProducts = await Product.find({
-    expiryDate: { $lte: currentDate },
-    isExpired: { $ne: true },
-  });
+// async function checkExpiredProducts() {
+//   const currentDate = new Date();
+//   const expiredProducts = await Product.find({
+//     expiryDate: { $lte: currentDate },
+//     isExpired: { $ne: true },
+//   });
 
-  for (let product of expiredProducts) {
-    product.isExpired = true;
-    await product.save();
-  }
+//   for (let product of expiredProducts) {
+//     product.isExpired = true;
+//     await product.save();
+//   }
 
-  console.log(
-    `Checked for expired products at ${currentDate}. ${expiredProducts.length} products found and marked as expired.`
-  );
-}
+//   console.log(
+//     `Checked for expired products at ${currentDate}. ${expiredProducts.length} products found and marked as expired.`
+//   );
+// }
 
 const createSales = asyncHandler(async (req, res) => {
   try {
@@ -727,7 +727,7 @@ module.exports = {
   updateUser,
   addProduct,
   addCategory,
-  checkExpiredProducts,
+  // checkExpiredProducts,
   createSales,
   getProducts,
   getExpiredProducts,
