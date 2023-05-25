@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {addCategory, getCategories} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addCategory, getCategories } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 import DeleteCategoryButton from "../components/DeleteCategoryButton";
-import {FiEdit} from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import UpdateCategoryForm from "../components/UpdateCategoryForm";
 
 import CategoryTable from "../components/CategoryTable";
@@ -18,9 +18,9 @@ export default function Categories() {
     categoryDescription: "",
   });
 
-  const {categoryName, categoryDescription} = categoryData;
+  const { categoryName, categoryDescription } = categoryData;
 
-  const {categories, user} = useSelector((state) => state.user);
+  const { categories, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -28,12 +28,12 @@ export default function Categories() {
   }, [navigate, dispatch, addCategory, getCategories]);
 
   const onChange = (e) => {
-    setCategoryData({...categoryData, [e.target.name]: e.target.value});
+    setCategoryData({ ...categoryData, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addCategory({categoryData, toast}));
+    dispatch(addCategory({ categoryData, toast }));
     setCategoryData({
       categoryName: "",
       categoryDescription: "",
@@ -73,13 +73,19 @@ export default function Categories() {
   };
 
   const handleModal = () => {
-    setCategoryToEdit(categories);
+    // setCategoryToEdit(categories);
     setShowEditModal(true);
   };
 
   const label = "flex text-base font-mont font-medium pt-2";
   const input =
     "w-full text-sm font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded";
+
+  const handleCategoryEdit = (category) => {
+    setCategoryToEdit(category);
+  };
+
+  console.log(categoryToEdit);
 
   return (
     <div className="w-full h-full">
@@ -125,7 +131,7 @@ export default function Categories() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{resize: "none"}}
+                        style={{ resize: "none" }}
                         name="categoryDescription"
                         value={categoryDescription}
                         onChange={(e) => onChange(e)}
@@ -161,13 +167,14 @@ export default function Categories() {
         search={search}
         setSearch={setSearch}
         handleModal={handleModal}
+        handleCategoryEdit={handleCategoryEdit}
       />
 
       {showEditModal && (
-        <div className="fixed left-0 right-0 mx-auto z-50 w-1/2 max-h-full overflow-auto bg-white rounded-lg shadow-lg p-4">
+        <div className="bg-white mt-3 p-10 rounded-lg">
           <UpdateCategoryForm category={categoryToEdit} />
           <button
-            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
+            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded "
             onClick={() => setShowEditModal(false)}
           >
             Close

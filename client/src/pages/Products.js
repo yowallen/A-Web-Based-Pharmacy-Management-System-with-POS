@@ -37,6 +37,8 @@ export default function Products() {
     productLimit,
   } = productData;
 
+  console.log(typeof productLimit);
+
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getCategories());
@@ -55,7 +57,7 @@ export default function Products() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (quantity === 0 || quantity < productLimit) {
+    if (parseInt(quantity, 10) < parseInt(productLimit, 10)) {
       toast.error(
         "Quantity must be greater than 0 or greater than product limit"
       );
@@ -103,6 +105,10 @@ export default function Products() {
   const handleModal = () => {
     setProductToEdit(products);
     setShowProductModal(true);
+  };
+
+  const productOnEdit = (data) => {
+    setProductToEdit(data);
   };
   return (
     <div className="w-full h-full">
@@ -294,6 +300,7 @@ export default function Products() {
         search={search}
         setSearch={setSearch}
         handleModal={handleModal}
+        productOnEdit={productOnEdit}
       />
 
       {showProductModal && (

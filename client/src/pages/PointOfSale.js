@@ -27,22 +27,19 @@ export default function PointOfSale() {
     setIsOpen(true);
   }
 
-  useEffect(() => {
-    if (!user) navigate("/login");
-    dispatch(getProducts());
-  }, [dispatch, navigate]);
-
   const { products, user, receipt } = useSelector((state) => state.user);
 
-  const options = products.map((product) => ({
-    value: {
-      id: product._id,
-      product: product.productName,
-      price: product.price,
-      quantity: product.quantity,
-    },
-    label: `${product.productName}: stock(${product.quantity})`,
-  }));
+  const options = products
+    .filter((product) => new Date(product.expiryDate) > new Date()) // Exclude expired products
+    .map((product) => ({
+      value: {
+        id: product._id,
+        product: product.productName,
+        price: product.price,
+        quantity: product.quantity,
+      },
+      label: `${product.productName}: stock(${product.quantity})`,
+    }));
 
   const handleAddProduct = (event) => {
     event.preventDefault();
@@ -144,6 +141,7 @@ export default function PointOfSale() {
   // Function to close the receipt modal
   const handleCloseReceiptModal = () => {
     setShowReceiptModal(false);
+    dispatch(getProducts());
   };
 
   const handleEditQuantity = (productId) => {
@@ -165,6 +163,11 @@ export default function PointOfSale() {
     toast.success("product Updated");
     setDisplayProducts(updatedProducts);
   };
+
+  useEffect(() => {
+    if (!user) navigate("/login");
+    dispatch(getProducts());
+  }, [dispatch, navigate, payProducts, getProducts]);
 
   return (
     <div className="w-full">

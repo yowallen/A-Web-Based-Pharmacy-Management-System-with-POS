@@ -155,7 +155,6 @@ const addProduct = asyncHandler(async (req, res) => {
     !measurement ||
     !quantity ||
     !price ||
-    !description ||
     !expiryDate
   ) {
     res.status(400);
@@ -341,7 +340,7 @@ const createSales = asyncHandler(async (req, res) => {
 const getTodaySalesTotal = asyncHandler(async (req, res) => {
   try {
     const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     const sales = await Sales.aggregate([
       {
@@ -395,7 +394,7 @@ const getSalesCountToday = asyncHandler(async (req, res) => {
 
 //get all products that is not expired newest first
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({ isExpired: false }).sort({
+  const products = await Product.find().sort({
     createdAt: -1,
   });
   res.json(products);
@@ -403,7 +402,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
 //get all products count that is not expired
 const getProductsCount = asyncHandler(async (req, res) => {
-  const products = await Product.find({ isExpired: false });
+  const products = await Product.find();
   const count = products.length;
   res.json(count);
 });
@@ -658,7 +657,11 @@ const updateProduct = asyncHandler(async (req, res) => {
         description: productData.description,
         expiryDate: productData.expiryDate,
         prescriptionRequired: productData.prescriptionRequired,
-        stockedIn: productData.quantity,
+        stockedIn:
+          productData.quantity > 0
+            ? parseInt(productData.quantity, 10) +
+              parseInt(existingProduct.stockedIn, 10)
+            : productData.stockedIn,
       },
       {
         new: true,
@@ -688,7 +691,30 @@ const getLowQuantityProducts = asyncHandler(async (req, res) => {
     $expr: {
       $lte: ["$quantity", "$productLimit"],
     },
-    isExpired: false,
+  }).sort({ createdAt: -1 });
+
+  res.json(products);
+});
+
+const getAlmostExpired = asyncHandler(async (req, res) => {
+  const currentDate = new Date();
+  const oneMonthFromNow = new Date();
+  oneMonthFromNow.setDate(currentDate.getDate() + 30); // Set the date one month from the current date
+
+  const products = await Product.find({
+    $or: [
+      {
+        expiryDate: {
+          $gte: currentDate, // Products that have not expired yet
+          $lte: oneMonthFromNow, // Products expiring within one month from the current date
+        },
+      },
+      {
+        expiryDate: {
+          $lt: currentDate, // Products that have already expired
+        },
+      },
+    ],
   }).sort({ createdAt: -1 });
 
   res.json(products);
@@ -719,4 +745,5 @@ module.exports = {
   deleteProduct,
   getTopProductsByMonth,
   getLowQuantityProducts,
+  getAlmostExpired,
 };

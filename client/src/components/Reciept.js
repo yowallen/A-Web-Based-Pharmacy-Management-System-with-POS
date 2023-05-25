@@ -1,4 +1,5 @@
 import React from "react";
+import { getProducts } from "../features/userSlice";
 
 const Reciept = ({ sale, closeModal }) => {
   // function printReceipt() {
