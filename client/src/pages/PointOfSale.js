@@ -17,14 +17,14 @@ export default function PointOfSale() {
   const [total, setTotal] = useState(0);
   const [newQuantity, setNewQuantity] = useState();
 
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);
 
-  function closeModal() {
-    setIsOpen(false);
+  function openModal(productId) {
+    setIsOpen(productId);
   }
 
-  function openModal() {
-    setIsOpen(true);
+  function closeModal() {
+    setIsOpen(null);
   }
 
   const { products, user, receipt } = useSelector((state) => state.user);
@@ -138,7 +138,7 @@ export default function PointOfSale() {
       setPayProducts([]);
       dispatch(getProducts());
     } else {
-      toast.error("please select a product");
+      return toast.error("please select a product");
     }
   };
 
@@ -148,15 +148,17 @@ export default function PointOfSale() {
     dispatch(getProducts());
   };
 
-  const handleEditQuantity = (productId) => {
-    // Find the product in the displayProducts array with the matching productId
-    const updatedProducts = displayProducts.map((product) => {
-      if (product.id === productId) {
-        const parsedQuantity = parseInt(newQuantity);
-        if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
-          return product;
-        }
+  const [editedProductId, setEditedProductId] = useState("");
 
+  const handleEditQuantity = (editedProduct) => {
+    const parsedQuantity = parseInt(newQuantity);
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      toast.error("Invalid quantity");
+      return;
+    }
+
+    const updatedProducts = displayProducts.map((product) => {
+      if (product.id === editedProduct.id) {
         return {
           ...product,
           quantity: parsedQuantity,
@@ -164,14 +166,30 @@ export default function PointOfSale() {
       }
       return product;
     });
-    toast.success("product Updated");
+
+    const existingPayProductIndex = payProducts.findIndex(
+      (product) => product.productId === editedProduct.id
+    );
+
+    if (existingPayProductIndex !== -1) {
+      const updatedPayProducts = [...payProducts];
+      updatedPayProducts[existingPayProductIndex].quantity = parsedQuantity;
+
+      setPayProducts(updatedPayProducts);
+    }
+
+    toast.success("Product Updated");
     setDisplayProducts(updatedProducts);
+    setEditedProductId(""); // Reset the edited product ID
+    setNewQuantity(""); // Reset the new quantity value
   };
 
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getProducts());
   }, [dispatch, navigate, payProducts, getProducts]);
+
+  console.log(payProducts);
 
   return (
     <div className="w-full">
@@ -227,11 +245,8 @@ export default function PointOfSale() {
               </thead>
               <tbody>
                 {displayProducts.map((product) => (
-                  <>
-                    <tr
-                      key={product.id}
-                      className="flex justify-between text-sm font-light text-center"
-                    >
+                  <Fragment key={product.id}>
+                    <tr className="flex justify-between text-sm font-light text-center">
                       <td className="w-full">{product.product}</td>
                       <td className="w-full">{product.quantity}</td>
                       <td className="w-full">{product.price}</td>
@@ -240,84 +255,86 @@ export default function PointOfSale() {
                       </td>
                       <td className="w-full">
                         <button
-                          onClick={openModal}
+                          onClick={() => openModal(product.id)}
                           className="text-blue-500 hover:underline"
                         >
                           Edit
                         </button>
                       </td>
                     </tr>
-                    <Transition appear show={isOpen} as={Fragment}>
-                      <Dialog
-                        as="div"
-                        className="relative z-10"
-                        onClose={closeModal}
-                      >
-                        <Transition.Child
-                          as={Fragment}
-                          enter="ease-out duration-300"
-                          enterFrom="opacity-0"
-                          enterTo="opacity-100"
-                          leave="ease-in duration-200"
-                          leaveFrom="opacity-100"
-                          leaveTo="opacity-0"
+                    {isOpen === product.id && (
+                      <Transition appear show={true} as={Fragment}>
+                        <Dialog
+                          as="div"
+                          className="relative z-10"
+                          onClose={closeModal}
                         >
-                          <div className="fixed inset-0 bg-black bg-opacity-25" />
-                        </Transition.Child>
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <div className="fixed inset-0 bg-black bg-opacity-25" />
+                          </Transition.Child>
 
-                        <div className="fixed inset-0 overflow-y-auto">
-                          <div className="flex min-h-full items-center justify-center p-4 text-center">
-                            <Transition.Child
-                              as={Fragment}
-                              enter="ease-out duration-300"
-                              enterFrom="opacity-0 scale-95"
-                              enterTo="opacity-100 scale-100"
-                              leave="ease-in duration-200"
-                              leaveFrom="opacity-100 scale-100"
-                              leaveTo="opacity-0 scale-95"
-                            >
-                              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                <Dialog.Title
-                                  as="h3"
-                                  className="text-lg font-medium leading-6 text-gray-900"
-                                >
-                                  Update Quantity
-                                </Dialog.Title>
-                                <div className="mt-2">
-                                  <input
-                                    type="number"
-                                    value={newQuantity}
-                                    onChange={(e) =>
-                                      setNewQuantity(e.target.value)
-                                    }
-                                  />
-                                </div>
+                          <div className="fixed inset-0 overflow-y-auto">
+                            <div className="flex min-h-full items-center justify-center p-4 text-center">
+                              <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 scale-95"
+                                enterTo="opacity-100 scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 scale-100"
+                                leaveTo="opacity-0 scale-95"
+                              >
+                                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                  <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium leading-6 text-gray-900"
+                                  >
+                                    Update Quantity
+                                  </Dialog.Title>
+                                  <div className="mt-2">
+                                    <input
+                                      type="number"
+                                      value={newQuantity}
+                                      onChange={(e) =>
+                                        setNewQuantity(e.target.value)
+                                      }
+                                    />
+                                  </div>
 
-                                <div className="mt-4">
-                                  <button
-                                    type="button"
-                                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                    onClick={() =>
-                                      handleEditQuantity(product.id)
-                                    }
-                                  >
-                                    Update
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                    onClick={() => closeModal()}
-                                  >
-                                    Close
-                                  </button>
-                                </div>
-                              </Dialog.Panel>
-                            </Transition.Child>
+                                  <div className="mt-4">
+                                    <button
+                                      type="button"
+                                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                      onClick={() =>
+                                        handleEditQuantity(product)
+                                      }
+                                    >
+                                      Update
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                      onClick={() => closeModal()}
+                                    >
+                                      Close
+                                    </button>
+                                  </div>
+                                </Dialog.Panel>
+                              </Transition.Child>
+                            </div>
                           </div>
-                        </div>
-                      </Dialog>
-                    </Transition>
-                  </>
+                        </Dialog>
+                      </Transition>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
