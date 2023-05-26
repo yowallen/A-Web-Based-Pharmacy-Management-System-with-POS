@@ -131,11 +131,15 @@ export default function PointOfSale() {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   const handlePay = () => {
-    dispatch(createSales({ payProducts, toast }));
-    setShowReceiptModal(true);
-    setDisplayProducts([]);
-    setPayProducts([]);
-    dispatch(getProducts());
+    if (payProducts.length > 0) {
+      dispatch(createSales({ payProducts, toast }));
+      setShowReceiptModal(true);
+      setDisplayProducts([]);
+      setPayProducts([]);
+      dispatch(getProducts());
+    } else {
+      toast.error("please select a product");
+    }
   };
 
   // Function to close the receipt modal
