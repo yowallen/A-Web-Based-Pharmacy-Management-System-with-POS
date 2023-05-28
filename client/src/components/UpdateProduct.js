@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {updateProduct} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateProduct } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 
-const UpdateProduct = ({product, categories, user}) => {
+const UpdateProduct = ({ product, categories, user }) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -15,6 +15,7 @@ const UpdateProduct = ({product, categories, user}) => {
     expiryDate: product.expiryDate,
     description: product.description,
     prescriptionRequired: product.prescriptionRequired,
+    productLimit: product.productLimit,
   });
 
   const {
@@ -27,6 +28,7 @@ const UpdateProduct = ({product, categories, user}) => {
     expiryDate,
     description,
     prescriptionRequired,
+    productLimit,
   } = productData;
 
   const handleChange = (e) => {
@@ -117,6 +119,20 @@ const UpdateProduct = ({product, categories, user}) => {
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           <label
+            htmlFor="quantity"
+            className="font-semibold text-gray-700 text-md"
+          >
+            Product Limit:
+          </label>
+          <input
+            type="number"
+            id="productLimit"
+            value={productLimit}
+            onChange={handleChange}
+            name="productLimit"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <label
             htmlFor="price"
             className="font-semibold text-gray-700 text-md"
           >
@@ -180,6 +196,7 @@ const UpdateProduct = ({product, categories, user}) => {
                 name="prescriptionRequired"
                 value={prescriptionRequired}
                 onChange={handleChange}
+                checked={prescriptionRequired}
               />
               <p className="text-sm font-normal">
                 This product requires medical prescription.
