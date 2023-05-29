@@ -73,13 +73,19 @@ export default function Categories() {
   };
 
   const handleModal = () => {
-    setCategoryToEdit(categories);
+    // setCategoryToEdit(categories);
     setShowEditModal(true);
   };
 
   const label = "flex text-base font-mont font-medium pt-2";
   const input =
     "w-full text-sm font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded";
+
+  const handleCategoryEdit = (category) => {
+    setCategoryToEdit(category);
+  };
+
+  console.log(categoryToEdit);
 
   return (
     <div className="w-full h-full">
@@ -161,18 +167,35 @@ export default function Categories() {
         search={search}
         setSearch={setSearch}
         handleModal={handleModal}
+        handleCategoryEdit={handleCategoryEdit}
       />
 
       {showEditModal && (
-        <div className="fixed left-0 right-0 mx-auto z-50 w-1/2 max-h-full overflow-auto bg-white rounded-lg shadow-lg p-4">
-          <UpdateCategoryForm category={categoryToEdit} />
-          <button
-            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
-            onClick={() => setShowEditModal(false)}
-          >
-            Close
-          </button>
-        </div>
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
+            <div className="relative w-auto my-6 mx-auto">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-xl font-semibold">Edit Category</h3>
+                </div>
+                {/*body*/}
+                <div className="relative p-3 flex-auto">
+                  <UpdateCategoryForm category={categoryToEdit} />
+                  <button
+                    className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded "
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+                {/*footer*/}
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
       )}
     </div>
   );

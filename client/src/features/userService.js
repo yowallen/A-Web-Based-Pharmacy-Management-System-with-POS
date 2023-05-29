@@ -31,6 +31,7 @@ const getExpired = () => API_URL.get("/expiredproducts");
 const getMonthSales = () => API_URL.get("/monthsales");
 const topProducts = () => API_URL.get("/topproducts");
 const lowProducts = () => API_URL.get("/lowquantity");
+const almostExpired = () => API_URL.get("/getalmostexpired");
 
 const addProduct = (productData) => API_URL.post("/addproduct", productData);
 const createSales = (payProducts) => API_URL.post("/createsales", payProducts);
@@ -72,6 +73,7 @@ const userAPI = {
   deleteProduct,
   topProducts,
   lowProducts,
+  almostExpired,
 };
 
 export default userAPI;

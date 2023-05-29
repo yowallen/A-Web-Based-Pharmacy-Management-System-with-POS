@@ -16,6 +16,7 @@ import {
   productCount,
   topProducts,
   lowProducts,
+  getAlmostExpired,
 } from "../features/userSlice";
 import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
@@ -34,6 +35,16 @@ export default function Dashboard() {
     setIsOpen(true);
   }
 
+  let [expireisOpen, setexpireIsOpen] = useState(false);
+
+  function expirecloseModal() {
+    setexpireIsOpen(false);
+  }
+
+  function expireopenModal() {
+    setexpireIsOpen(true);
+  }
+
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getTodaySalesTotal());
@@ -41,10 +52,19 @@ export default function Dashboard() {
     dispatch(productCount());
     dispatch(topProducts());
     dispatch(lowProducts());
+    dispatch(getAlmostExpired());
   }, [dispatch, navigate]);
 
-  const {salesToday, salesCountToday, productsCount, user, lowProduct} =
-    useSelector((state) => state.user);
+  const {
+    salesToday,
+    salesCountToday,
+    productsCount,
+    user,
+    lowProduct,
+    almostExpired,
+  } = useSelector((state) => state.user);
+
+  console.log(lowProduct);
 
   useEffect(() => {
     if (lowProduct.length > 0) {
@@ -53,6 +73,14 @@ export default function Dashboard() {
       closeModal();
     }
   }, [dispatch, lowProducts, navigate, lowProduct]);
+
+  useEffect(() => {
+    if (almostExpired.length > 0) {
+      expireopenModal();
+    } else {
+      expirecloseModal();
+    }
+  }, [dispatch, almostExpired, navigate, getAlmostExpired]);
 
   const card = "py-3 px-6";
 
@@ -143,6 +171,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
@@ -176,7 +205,7 @@ export default function Dashboard() {
                     <span className="text-yellow-400 text-3xl">
                       <TiWarning />
                     </span>
-                    Product Low in Quantity
+                    Product Low in Quantity{" "}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500 mb-5">
@@ -189,11 +218,11 @@ export default function Dashboard() {
                           <li className="pb-1">
                             <i className="font-bold text-lg">
                               {product.productName}
-                            </i>{" "}
+                            </i>
                             only has{" "}
                             <strong className="font-bold text-red-500 text-lg">
-                              {product.quantity}
-                            </strong>{" "}
+                              {product.quantity}{" "}
+                            </strong>
                             left in stock.
                           </li>
                         ))}
@@ -205,6 +234,85 @@ export default function Dashboard() {
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={closeModal}
+                    >
+                      Got it, thanks!
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Transition appear show={expireisOpen} as={Fragment}>
+        <Dialog as="div" className="relative" onClose={expirecloseModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-x-1"
+                  >
+                    <span className="text-yellow-400 text-3xl">
+                      <TiWarning />
+                    </span>
+                    Product/s that are almost expired
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500 mb-5">
+                      Seems like you have some products that are 1 month before
+                      expiration, please check in the products tab.
+                    </p>
+                    <ul>
+                      {almostExpired &&
+                        almostExpired.map((product) => (
+                          <li className="pb-1 flex items-center gap-x-2">
+                            <i className="font-bold text-lg">
+                              {product.productName}{" "}
+                            </i>
+                            <p>will almost expire on</p>
+                            {/* 1 month before expired */}
+                            <strong className="font-bold text-red-500 text-lg">
+                              (
+                              {new Date(product.expiryDate).toLocaleDateString(
+                                "en-US",
+                                {dateStyle: "medium"}
+                              )}{" "}
+                              )
+                            </strong>
+                            {/* left in stock. */}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={expirecloseModal}
                     >
                       Got it, thanks!
                     </button>

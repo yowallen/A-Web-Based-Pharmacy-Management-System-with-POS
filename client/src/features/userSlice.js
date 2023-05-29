@@ -18,6 +18,7 @@ const initialState = {
   receipt: [],
   topProduct: [],
   lowProduct: [],
+  almostExpired: [],
 };
 
 export const userLogin = createAsyncThunk(
@@ -237,6 +238,14 @@ export const lowProducts = createAsyncThunk("user/lowquantity", async () => {
   return response.data;
 });
 
+export const getAlmostExpired = createAsyncThunk(
+  "user/almostexpired",
+  async () => {
+    const response = await userService.almostExpired();
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -331,6 +340,9 @@ const userSlice = createSlice({
     },
     [lowProducts.fulfilled]: (state, action) => {
       state.lowProduct = action.payload;
+    },
+    [getAlmostExpired.fulfilled]: (state, action) => {
+      state.almostExpired = action.payload;
     },
   },
 });
