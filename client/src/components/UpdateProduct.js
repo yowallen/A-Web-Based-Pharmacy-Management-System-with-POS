@@ -59,7 +59,7 @@ const UpdateProduct = ({ product, categories, user }) => {
       {user === "Admin" ? (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col  space-y-2 justify-center"
+          className="flex flex-col  space-y-2 justify-center text-sm"
         >
           <label
             htmlFor="productName"
@@ -73,7 +73,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={productName}
             onChange={handleChange}
             name="productName"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
 
           <label
@@ -88,7 +88,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={productType}
             onChange={handleChange}
             name="productType"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label
             htmlFor="measurement"
@@ -102,7 +102,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={measurement}
             onChange={handleChange}
             name="measurement"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label
             htmlFor="quantity"
@@ -116,7 +116,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={quantity}
             onChange={handleChange}
             name="quantity"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label
             htmlFor="quantity"
@@ -144,7 +144,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={price}
             onChange={handleChange}
             name="price"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label
             htmlFor="description"
@@ -158,7 +158,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={description}
             onChange={handleChange}
             name="description"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label
             htmlFor="expiryDate"
@@ -172,7 +172,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={new Date(expiryDate).toISOString().slice(0, 10)}
             onChange={handleChange}
             name="expiryDate"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <div className="flex-col">
             <label className={label}>Product Category:</label>

@@ -1,6 +1,6 @@
 import DataTable from "react-data-table-component";
-import { TbCurrencyPeso } from "react-icons/tb";
-import { BiSearchAlt } from "react-icons/bi";
+import {TbCurrencyPeso} from "react-icons/tb";
+import {BiSearchAlt} from "react-icons/bi";
 
 export default function ProductsTable({
   data,
@@ -31,7 +31,7 @@ export default function ProductsTable({
 
   const applyConditionalStyles = (row) => {
     if (row.quantity <= row.productLimit) {
-      return { backgroundColor: "yellow" };
+      return {backgroundColor: "yellow"};
     }
     return null;
   };
@@ -50,26 +50,34 @@ export default function ProductsTable({
       name: "Product",
       selector: (row) =>
         row.prescriptionRequired ? (
-          <div className="flex items-center gap-x-1">
-            <div className="p-1 bg-emerald-600"></div>
-            <div>{row.productName}</div>
+          <div>
+            <div className="flex items-center gap-x-1">
+              <div className="p-1 bg-emerald-600"></div>
+              <div>{row.productName}</div>
+            </div>
+            <div className="font-light">
+              <p>Measurement: {row.measurement}</p>
+              <p>Type: {row.productType}</p>
+              <p>Description: {row.description}</p>
+            </div>
           </div>
         ) : (
-          <div className="flex items-center gap-x-1">
-            <div className="p-1 bg-rose-600"></div>
-            <div>{row.productName}</div>
-            {console.log(row)}
+          <div>
+            <div className="flex items-center gap-x-1">
+              <div className="p-1 bg-amber-400"></div>
+              <div>{row.productName}</div>
+            </div>
+            <div className="font-light">
+              <p>Measurement: {row.measurement}</p>
+              <p>Type: {row.productType}</p>
+              <p>Description: {row.description}</p>
+            </div>
           </div>
         ),
     },
     {
-      name: "Measurement",
-      selector: (row) => row.measurement,
-      sortable: true,
-    },
-    {
-      name: "Type",
-      selector: (row) => row.productType,
+      name: "Stocks",
+      selector: (row) => row.quantity,
       sortable: true,
     },
     {
@@ -77,7 +85,6 @@ export default function ProductsTable({
       selector: (row) => row.category,
       sortable: true,
     },
-
     {
       name: "Price",
       cell: (row) => (
@@ -111,6 +118,7 @@ export default function ProductsTable({
         data={data}
         customStyles={customStyles}
         pagination
+        highlightOnHover
         fixedHeader
         fixedHeaderScrollHeight="550px"
         subHeader

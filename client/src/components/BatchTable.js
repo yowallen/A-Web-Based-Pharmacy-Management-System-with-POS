@@ -34,11 +34,10 @@ const BatchTable = ({data, search, setSearch}) => {
           </div>
         ) : (
           <div className="flex items-center gap-x-1">
-            <div className="p-1 bg-rose-600"></div>
+            <div className="p-1 bg-amber-400"></div>
             <div>{row.productName}</div>
           </div>
         ),
-      sortable: true,
     },
     {
       name: "Encoded",
@@ -55,8 +54,8 @@ const BatchTable = ({data, search, setSearch}) => {
       sortable: true,
     },
     {
-      name: "Stock",
-      selector: (row) => row.quantity,
+      name: "Stock In",
+      selector: (row) => row.stockedIn,
       sortable: true,
     },
   ];

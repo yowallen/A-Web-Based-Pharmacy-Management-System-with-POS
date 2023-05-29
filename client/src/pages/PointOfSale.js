@@ -1,12 +1,12 @@
-import { useEffect, useState, Fragment } from "react";
+import {useEffect, useState, Fragment} from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts, createSales } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getProducts, createSales} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 import Reciept from "../components/Reciept";
-import { Dialog, Transition } from "@headlessui/react";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {Dialog, Transition} from "@headlessui/react";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function PointOfSale() {
     setIsOpen(null);
   }
 
-  const { products, user, receipt } = useSelector((state) => state.user);
+  const {products, user, receipt} = useSelector((state) => state.user);
 
   const options = products
     .filter((product) => new Date(product.expiryDate) > new Date()) // Exclude expired products
@@ -46,8 +46,8 @@ export default function PointOfSale() {
 
     if (!selectedProducts) return toast.error("Please select a product");
 
-    const { value } = selectedProducts;
-    const { value: quantityValue } = event.target.quantity;
+    const {value} = selectedProducts;
+    const {value: quantityValue} = event.target.quantity;
 
     if (value.quantity < quantityValue) {
       return toast.error(
@@ -111,7 +111,7 @@ export default function PointOfSale() {
         // Add a new product to payProducts
         setPayProducts([
           ...payProducts,
-          { productId: value.id, quantity: parseInt(quantityValue) },
+          {productId: value.id, quantity: parseInt(quantityValue)},
         ]);
       }
 
@@ -132,7 +132,8 @@ export default function PointOfSale() {
 
   const handlePay = () => {
     if (payProducts.length > 0) {
-      dispatch(createSales({ payProducts, toast }));
+      dispatch(createSales({payProducts, toast}));
+
       setShowReceiptModal(true);
       setDisplayProducts([]);
       setPayProducts([]);
@@ -211,11 +212,12 @@ export default function PointOfSale() {
             </div>
 
             <div className="flex-col w-4/12">
-              <label>Qty</label>
+              <label>Quantity</label>
               <input
                 name="quantity"
                 className="w-full text-sm font-normal p-2 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
                 type="number"
+                placeholder="Enter how many pieces"
               />
             </div>
             <button
@@ -234,29 +236,31 @@ export default function PointOfSale() {
             <table className="w-full border-2 border-acsent">
               <thead className="bg-prime">
                 <tr className="text-white text-lg">
-                  <th className="tracking-wide text-left">Amount</th>
-                  <th className="tracking-wide text-left">Product</th>
-                  <th className="tracking-wide text-left">Price</th>
-                  <th className="tracking-wide text-left">Qty</th>
-                  <th className="tracking-wide text-left">
-                    Edit Quantity
-                  </th>{" "}
+                  <th className="tracking-wide">Amount</th>
+                  <th className="tracking-wide">Product</th>
+                  <th className="tracking-wide">Price</th>
+                  <th className="tracking-wide">Qty</th>
+                  <th className="tracking-wide">Edit Quantity</th>{" "}
                 </tr>
               </thead>
               <tbody>
                 {displayProducts.map((product) => (
                   <Fragment key={product.id}>
-                    <tr className="flex justify-between text-sm font-light text-center">
-                      <td className="w-full">{product.product}</td>
-                      <td className="w-full">{product.quantity}</td>
-                      <td className="w-full">{product.price}</td>
-                      <td className="w-full">
+                    <tr className="text-sm font-light text-center">
+                      <td className="p-3 flex items-center justify-center">
+                        <TbCurrencyPeso />
                         {product.price * product.quantity}
                       </td>
-                      <td className="w-full">
+                      <td className="p-3">{product.product}</td>
+                      <td className="p-3 flex items-center justify-center">
+                        <TbCurrencyPeso />
+                        {product.price}
+                      </td>
+                      <td className="p-3">{product.quantity}</td>
+                      <td>
                         <button
                           onClick={() => openModal(product.id)}
-                          className="text-blue-500 hover:underline"
+                          className="bg-prime px-4 py-2 rounded text-white font-semibold hover:bg-sky-500"
                         >
                           Edit
                         </button>
@@ -352,7 +356,7 @@ export default function PointOfSale() {
             </span>
             <button
               onClick={handlePay}
-              className="bg-prime text-white py-2 px-4 rounded hover:bg-sec"
+              className="bg-prime text-white py-2 px-4 rounded hover:bg-sky-500"
             >
               Pay Now
             </button>

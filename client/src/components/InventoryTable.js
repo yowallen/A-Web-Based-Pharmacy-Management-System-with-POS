@@ -23,6 +23,23 @@ const InventoryTable = ({data, search, setSearch}) => {
       },
     },
   };
+
+  const applyConditionalStyles = (row) => {
+    if (row.quantity <= row.productLimit) {
+      return {backgroundColor: "yellow"};
+    }
+    return null;
+  };
+
+  const conditionalRowStyles = [
+    {
+      when: applyConditionalStyles,
+      style: {
+        backgroundColor: "yellow",
+      },
+    },
+  ];
+
   const columns = [
     {
       name: "Product",
@@ -34,7 +51,7 @@ const InventoryTable = ({data, search, setSearch}) => {
           </div>
         ) : (
           <div className="flex items-center gap-x-1">
-            <div className="p-1 bg-rose-600"></div>
+            <div className="p-1 bg-amber-400"></div>
             <div>{row.productName}</div>
           </div>
         ),
@@ -83,6 +100,7 @@ const InventoryTable = ({data, search, setSearch}) => {
             />
           </div>
         }
+        conditionalRowStyles={conditionalRowStyles}
       />
     </div>
   );

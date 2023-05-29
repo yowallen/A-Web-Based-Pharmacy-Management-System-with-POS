@@ -1,6 +1,6 @@
-import React, { useEffect, Fragment, useState } from "react";
-import { Link } from "react-router-dom";
-import { Dialog, Transition } from "@headlessui/react";
+import React, {useEffect, Fragment, useState} from "react";
+import {Link} from "react-router-dom";
+import {Dialog, Transition} from "@headlessui/react";
 import {
   FaShoppingBag,
   FaChartBar,
@@ -8,8 +8,8 @@ import {
   FaArrowCircleRight,
   FaHistory,
 } from "react-icons/fa";
-import { TiWarning } from "react-icons/ti";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {TiWarning} from "react-icons/ti";
+import {TbCurrencyPeso} from "react-icons/tb";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
@@ -18,8 +18,8 @@ import {
   lowProducts,
   getAlmostExpired,
 } from "../features/userSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -99,7 +99,7 @@ export default function Dashboard() {
               {salesToday}
             </p>
             <span className="flex justify-end">
-              <FaChartBar style={{ fontSize: "6rem", color: "#b45309" }} />
+              <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
             </span>
           </div>
           <div className="bg-amber-700 font-normal text-base">
@@ -119,7 +119,7 @@ export default function Dashboard() {
             {error && <p>{error}</p>} */}
             <p>{salesCountToday}</p>
             <span className="flex justify-end">
-              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
+              <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
             </span>
           </div>
           <div className="bg-emerald-800 font-normal text-base">
@@ -141,7 +141,7 @@ export default function Dashboard() {
             {error && <p>{error}</p>} */}
             <p>{productsCount}</p>
             <span className="flex justify-end">
-              <FaShoppingBag style={{ fontSize: "6rem", color: "#0369a1" }} />
+              <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
             </span>
           </div>
           <div className="bg-sky-700 font-normal text-base">
@@ -158,7 +158,7 @@ export default function Dashboard() {
           <div className={`${card} bg-red-500`}>
             <span>Order History</span>
             <span className="flex justify-end">
-              <FaHistory style={{ fontSize: "8.1rem", color: "#991b1b" }} />
+              <FaHistory style={{fontSize: "8.1rem", color: "#991b1b"}} />
             </span>
           </div>
           <div className="bg-red-800 font-normal text-base">
@@ -270,7 +270,7 @@ export default function Dashboard() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-x-1"
@@ -288,16 +288,18 @@ export default function Dashboard() {
                     <ul>
                       {almostExpired &&
                         almostExpired.map((product) => (
-                          <li className="pb-1">
+                          <li className="pb-1 flex items-center gap-x-2">
                             <i className="font-bold text-lg">
                               {product.productName}{" "}
                             </i>
+                            <p>will almost expire on</p>
                             {/* 1 month before expired */}
                             <strong className="font-bold text-red-500 text-lg">
                               (
-                              {new Date(
-                                product.expiryDate
-                              ).toLocaleDateString()}{" "}
+                              {new Date(product.expiryDate).toLocaleDateString(
+                                "en-US",
+                                {dateStyle: "medium"}
+                              )}{" "}
                               )
                             </strong>
                             {/* left in stock. */}

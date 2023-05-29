@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addCategory, getCategories } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {addCategory, getCategories} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 import DeleteCategoryButton from "../components/DeleteCategoryButton";
-import { FiEdit } from "react-icons/fi";
+import {FiEdit} from "react-icons/fi";
 import UpdateCategoryForm from "../components/UpdateCategoryForm";
 
 import CategoryTable from "../components/CategoryTable";
@@ -18,9 +18,9 @@ export default function Categories() {
     categoryDescription: "",
   });
 
-  const { categoryName, categoryDescription } = categoryData;
+  const {categoryName, categoryDescription} = categoryData;
 
-  const { categories, user } = useSelector((state) => state.user);
+  const {categories, user} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -28,12 +28,12 @@ export default function Categories() {
   }, [navigate, dispatch, addCategory, getCategories]);
 
   const onChange = (e) => {
-    setCategoryData({ ...categoryData, [e.target.name]: e.target.value });
+    setCategoryData({...categoryData, [e.target.name]: e.target.value});
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addCategory({ categoryData, toast }));
+    dispatch(addCategory({categoryData, toast}));
     setCategoryData({
       categoryName: "",
       categoryDescription: "",
@@ -131,7 +131,7 @@ export default function Categories() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{ resize: "none" }}
+                        style={{resize: "none"}}
                         name="categoryDescription"
                         value={categoryDescription}
                         onChange={(e) => onChange(e)}
@@ -171,15 +171,31 @@ export default function Categories() {
       />
 
       {showEditModal && (
-        <div className="bg-white mt-3 p-10 rounded-lg">
-          <UpdateCategoryForm category={categoryToEdit} />
-          <button
-            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded "
-            onClick={() => setShowEditModal(false)}
-          >
-            Close
-          </button>
-        </div>
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
+            <div className="relative w-auto my-6 mx-auto">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-xl font-semibold">Edit Category</h3>
+                </div>
+                {/*body*/}
+                <div className="relative p-3 flex-auto">
+                  <UpdateCategoryForm category={categoryToEdit} />
+                  <button
+                    className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded "
+                    onClick={() => setShowEditModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+                {/*footer*/}
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
       )}
     </div>
   );

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { addProduct, getCategories, getProducts } from "../features/userSlice";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -45,7 +45,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const { user, categories, products } = useSelector((state) => state.user);
+  const {user, categories, products} = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -63,7 +63,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({ productData, toast }));
+    dispatch(addProduct({productData, toast}));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -192,7 +192,14 @@ export default function Products() {
                     </div>
 
                     <div className="flex-col">
-                      <label className={label}>Quantity:</label>
+                      <label className={`${label} gap-x-2`}>
+                        Quantity:
+                        {quantity === 0 && (
+                          <p className="text-red-900 text-[15px]">
+                            must be greater than 0 and/or product limit.
+                          </p>
+                        )}
+                      </label>
                       <input
                         type="number"
                         className={input}
@@ -201,11 +208,6 @@ export default function Products() {
                         value={quantity}
                         onChange={(e) => onChange(e)}
                       />
-                      {quantity === 0 && (
-                        <p className="text-red-900 text-[15px]">
-                          must be greater than 0 or greater that product limit
-                        </p>
-                      )}
                     </div>
 
                     <div className="flex-col">
@@ -227,7 +229,7 @@ export default function Products() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{ resize: "none" }}
+                        style={{resize: "none"}}
                         name="description"
                         value={description}
                         onChange={(e) => onChange(e)}
@@ -304,19 +306,35 @@ export default function Products() {
       />
 
       {showProductModal && (
-        <div className="mx-auto z-50 w-1/2 bg-white rounded-lg shadow-lg p-4">
-          <UpdateProduct
-            product={prodcutToEdit}
-            categories={categories}
-            user={user.role}
-          />
-          <button
-            className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
-            onClick={() => setShowProductModal(false)}
-          >
-            Close
-          </button>
-        </div>
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
+            <div className="relative my-6 mx-auto basis-1/2">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-xl font-semibold">Adding New Product</h3>
+                </div>
+                {/*body*/}
+                <div className="relative p-3 flex-auto">
+                  <UpdateProduct
+                    product={prodcutToEdit}
+                    categories={categories}
+                    user={user.role}
+                  />
+                  <button
+                    className="block mx-auto mt-4 py-2 px-4 bg-gray-500 text-white rounded"
+                    onClick={() => setShowProductModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+                {/*footer*/}
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
       )}
     </div>
   );
