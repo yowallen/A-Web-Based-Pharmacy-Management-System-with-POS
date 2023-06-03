@@ -259,6 +259,66 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {showNotificationText && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "80px",
+            right: "70px",
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+            cursor: "pointer",
+            zIndex: "999",
+          }}
+          onClick={() => navigate("/low")}
+        >
+          <p
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "5px",
+            }}
+          >
+            You have {lowProduct.length} low product(s).
+          </p>
+          <p style={{ fontSize: "12px", color: "#666" }}>
+            Click here to view more details.
+          </p>
+        </div>
+      )}
+
+      {showExNotificationText && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "80px",
+            right: "70px",
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+            cursor: "pointer",
+            zIndex: "999",
+          }}
+          onClick={() => navigate("/products")}
+        >
+          <p
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "5px",
+            }}
+          >
+            You have {almostExpired.length} almost expired product(s).
+          </p>
+          <p style={{ fontSize: "12px", color: "#666" }}>
+            Click here to view more details.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
