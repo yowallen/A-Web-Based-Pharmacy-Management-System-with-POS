@@ -34,7 +34,7 @@ const lowProducts = () => API_URL.get("/lowquantity");
 const almostExpired = () => API_URL.get("/getalmostexpired");
 
 const addProduct = (productData) => API_URL.post("/addproduct", productData);
-const createSales = (payProducts) => API_URL.post("/createsales", payProducts);
+const createSales = (payload) => API_URL.post("/createsales", payload);
 const addCategory = (categoryData) =>
   API_URL.post("/addcategory", categoryData);
 

@@ -1,6 +1,5 @@
-import React, {useEffect, Fragment, useState} from "react";
-import {Link} from "react-router-dom";
-import {Dialog, Transition} from "@headlessui/react";
+import React, { useEffect, Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaShoppingBag,
   FaChartBar,
@@ -8,8 +7,7 @@ import {
   FaArrowCircleRight,
   FaHistory,
 } from "react-icons/fa";
-import {TiWarning} from "react-icons/ti";
-import {TbCurrencyPeso} from "react-icons/tb";
+import { TbCurrencyPeso } from "react-icons/tb";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
@@ -17,9 +15,11 @@ import {
   topProducts,
   lowProducts,
   getAlmostExpired,
+  getProducts,
 } from "../features/userSlice";
-import {useSelector, useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Products from "./Products";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -53,6 +53,7 @@ export default function Dashboard() {
     dispatch(topProducts());
     dispatch(lowProducts());
     dispatch(getAlmostExpired());
+    dispatch(getProducts());
   }, [dispatch, navigate]);
 
   const {
@@ -62,9 +63,8 @@ export default function Dashboard() {
     user,
     lowProduct,
     almostExpired,
+    products,
   } = useSelector((state) => state.user);
-
-  console.log(lowProduct);
 
   useEffect(() => {
     if (lowProduct.length > 0) {
@@ -72,7 +72,7 @@ export default function Dashboard() {
     } else {
       closeModal();
     }
-  }, [dispatch, lowProducts, navigate, lowProduct]);
+  }, [dispatch, lowProducts, products, navigate, lowProduct]);
 
   useEffect(() => {
     if (almostExpired.length > 0) {
@@ -82,24 +82,36 @@ export default function Dashboard() {
     }
   }, [dispatch, almostExpired, navigate, getAlmostExpired]);
 
+  const [showNotificationText, setShowNotificationText] = useState(false);
+  const [showExNotificationText, setExShowNotificationText] = useState(false);
+
+  // Function to handle notification click
+  const handleNotificationClick = () => {
+    setShowNotificationText(!showNotificationText);
+  };
+
+  const handleExNotificationClick = () => {
+    setExShowNotificationText(!showExNotificationText);
+  };
+
   const card = "py-3 px-6";
 
   return (
     <div className="font-pop h-full w-full">
       <h1 className="font-mont">Dashboard</h1>
 
-      <div className="flex justify-around py-3 my-4 text-ter">
+      <div className="flex justify-between py-3 my-4 text-ter">
         <div className="flex-col w-5/12">
           <div className={`${card} bg-amber-500`}>
             <span>Total Sales</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.totalSales}</p>)}
-            {error && <p>{error}</p>} */}
+      {error && <p>{error}</p>} */}
             <p className="flex items-center">
               <TbCurrencyPeso />
               {salesToday}
             </p>
             <span className="flex justify-end">
-              <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
+              <FaChartBar style={{ fontSize: "6rem", color: "#b45309" }} />
             </span>
           </div>
           <div className="bg-amber-700 font-normal text-base">
@@ -116,10 +128,10 @@ export default function Dashboard() {
           <div className={`${card} bg-emerald-600`}>
             <span>Number of Orders</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
-            {error && <p>{error}</p>} */}
+      {error && <p>{error}</p>} */}
             <p>{salesCountToday}</p>
             <span className="flex justify-end">
-              <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
+              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
             </span>
           </div>
           <div className="bg-emerald-800 font-normal text-base">
@@ -133,15 +145,66 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex justify-around py-3 my-8 text-ter">
+      <div className="flex justify-between py-3 my-8 text-ter">
         <div className="flex-col w-5/12">
           <div className={`${card} bg-sky-500`}>
             <span>Total Products</span>
             {/* /* {data && data.map((data) => <p key={data.id}>{data.totalProd}</p>)}
             {error && <p>{error}</p>} */}
             <p>{productsCount}</p>
+            {isOpen && (
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: "80px",
+                  right: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: "red",
+                  borderRadius: "50%",
+                  color: "white",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                  cursor: "pointer",
+                  zIndex: "999",
+                }}
+                onClick={handleNotificationClick}
+              >
+                {lowProduct.length}
+              </div>
+            )}
+
+            {expireisOpen && (
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: "150px",
+                  right: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: "red",
+                  borderRadius: "50%",
+                  color: "white",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                  cursor: "pointer",
+                  zIndex: "999",
+                }}
+                onClick={handleExNotificationClick}
+              >
+                {almostExpired.length}
+              </div>
+            )}
             <span className="flex justify-end">
-              <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
+              <FaShoppingBag style={{ fontSize: "6rem", color: "#0369a1" }} />
             </span>
           </div>
           <div className="bg-sky-700 font-normal text-base">
@@ -158,7 +221,7 @@ export default function Dashboard() {
           <div className={`${card} bg-red-500`}>
             <span>Order History</span>
             <span className="flex justify-end">
-              <FaHistory style={{fontSize: "8.1rem", color: "#991b1b"}} />
+              <FaHistory style={{ fontSize: "8.1rem", color: "#991b1b" }} />
             </span>
           </div>
           <div className="bg-red-800 font-normal text-base">
@@ -172,157 +235,30 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-x-1"
-                  >
-                    <span className="text-yellow-400 text-3xl">
-                      <TiWarning />
-                    </span>
-                    Product Low in Quantity{" "}
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500 mb-5">
-                      Seems like you have some products that are low in
-                      quantity, please check in the products tab.
-                    </p>
-                    <ul>
-                      {lowProduct &&
-                        lowProduct.map((product) => (
-                          <li className="pb-1">
-                            <i className="font-bold text-lg">
-                              {product.productName}
-                            </i>
-                            only has{" "}
-                            <strong className="font-bold text-red-500 text-lg">
-                              {product.quantity}{" "}
-                            </strong>
-                            left in stock.
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+      <div className="flex justify-between py-3 my-8 text-ter">
+        <div className="flex-col w-5/12">
+          <div className={`${card} bg-emerald-600`}>
+            <span>Updated Products</span>
+            {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
+      {error && <p>{error}</p>} */}
+            <p>
+              {products.length &&
+                `${products[0].productName} (${products[0].quantity})`}
+            </p>
+            <span className="flex justify-end">
+              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
+            </span>
           </div>
-        </Dialog>
-      </Transition>
-
-      <Transition appear show={expireisOpen} as={Fragment}>
-        <Dialog as="div" className="relative" onClose={expirecloseModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-x-1"
-                  >
-                    <span className="text-yellow-400 text-3xl">
-                      <TiWarning />
-                    </span>
-                    Product/s that are almost expired
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500 mb-5">
-                      Seems like you have some products that are 1 month before
-                      expiration, please check in the products tab.
-                    </p>
-                    <ul>
-                      {almostExpired &&
-                        almostExpired.map((product) => (
-                          <li className="pb-1 flex items-center gap-x-2">
-                            <i className="font-bold text-lg">
-                              {product.productName}{" "}
-                            </i>
-                            <p>will almost expire on</p>
-                            {/* 1 month before expired */}
-                            <strong className="font-bold text-red-500 text-lg">
-                              (
-                              {new Date(product.expiryDate).toLocaleDateString(
-                                "en-US",
-                                {dateStyle: "medium"}
-                              )}{" "}
-                              )
-                            </strong>
-                            {/* left in stock. */}
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={expirecloseModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+          <div className="bg-emerald-800 font-normal text-base">
+            <Link to="/new">
+              <div className="flex items-center justify-center gap-x-2">
+                <span>More Info</span>
+                <FaArrowCircleRight />
+              </div>
+            </Link>
           </div>
-        </Dialog>
-      </Transition>
+        </div>
+      </div>
     </div>
   );
 }

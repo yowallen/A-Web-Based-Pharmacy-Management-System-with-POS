@@ -1,12 +1,12 @@
-import {useEffect, useState, Fragment} from "react";
+import { useEffect, useState, Fragment } from "react";
 import Select from "react-select";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {getProducts, createSales} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts, createSales } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 import Reciept from "../components/Reciept";
-import {Dialog, Transition} from "@headlessui/react";
-import {TbCurrencyPeso} from "react-icons/tb";
+import { Dialog, Transition } from "@headlessui/react";
+import { TbCurrencyPeso } from "react-icons/tb";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -16,6 +16,20 @@ export default function PointOfSale() {
   const [payProducts, setPayProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [newQuantity, setNewQuantity] = useState();
+  const [totalSelected, setTotalSelected] = useState(0);
+
+  const [customer, setCustomer] = useState(false);
+  const [isDiscounted, setIsDiscounted] = useState(false);
+  const [customerPay, setCustomerPay] = useState(0);
+  const [calculatedDiscount, setCalculatedDiscount] = useState(0);
+
+  function customerOpen() {
+    setCustomer(true);
+  }
+
+  function closeCustomer() {
+    setCustomer(false);
+  }
 
   const [isOpen, setIsOpen] = useState(null);
 
@@ -27,7 +41,7 @@ export default function PointOfSale() {
     setIsOpen(null);
   }
 
-  const {products, user, receipt} = useSelector((state) => state.user);
+  const { products, user, receipt } = useSelector((state) => state.user);
 
   const options = products
     .filter((product) => new Date(product.expiryDate) > new Date()) // Exclude expired products
@@ -36,6 +50,7 @@ export default function PointOfSale() {
         id: product._id,
         product: product.productName,
         price: product.price,
+        cost: product.cost,
         quantity: product.quantity,
       },
       label: `${product.productName}: stock(${product.quantity})`,
@@ -46,8 +61,8 @@ export default function PointOfSale() {
 
     if (!selectedProducts) return toast.error("Please select a product");
 
-    const {value} = selectedProducts;
-    const {value: quantityValue} = event.target.quantity;
+    const { value } = selectedProducts;
+    const { value: quantityValue } = event.target.quantity;
 
     if (value.quantity < quantityValue) {
       return toast.error(
@@ -80,6 +95,7 @@ export default function PointOfSale() {
           id: value.id,
           product: value.product,
           price: value.price,
+          cost: value.cost,
           quantity: parseInt(quantityValue),
         };
 
@@ -111,7 +127,7 @@ export default function PointOfSale() {
         // Add a new product to payProducts
         setPayProducts([
           ...payProducts,
-          {productId: value.id, quantity: parseInt(quantityValue)},
+          { productId: value.id, quantity: parseInt(quantityValue) },
         ]);
       }
 
@@ -131,13 +147,14 @@ export default function PointOfSale() {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   const handlePay = () => {
-    if (payProducts.length > 0) {
-      dispatch(createSales({payProducts, toast}));
-
+    if (customerPay < totalSelected) return toast.error("Insufficient amount");
+    else if (payProducts.length > 0) {
+      dispatch(createSales({ sales: payProducts, isDiscounted, toast }));
       setShowReceiptModal(true);
       setDisplayProducts([]);
       setPayProducts([]);
       dispatch(getProducts());
+      closeCustomer();
     } else {
       return toast.error("please select a product");
     }
@@ -190,6 +207,42 @@ export default function PointOfSale() {
     dispatch(getProducts());
   }, [dispatch, navigate, payProducts, getProducts]);
 
+  const calculateTotalValue = () => {
+    const total = displayProducts.reduce(
+      (accumulator, product) => accumulator + product.price * product.quantity,
+      0
+    );
+    setTotalSelected(total);
+  };
+
+  useEffect(() => {
+    calculateTotalValue();
+  }, [displayProducts]);
+
+  const calculateDiscount = () => {
+    const totalDis = totalSelected * (0.8).toFixed(2);
+    setCalculatedDiscount(totalDis);
+  };
+
+  const handleDelete = (productId) => {
+    const updatedDisplayProducts = displayProducts.filter(
+      (product) => product.id !== productId
+    );
+    const updatedPayProducts = payProducts.filter(
+      (product) => product.productId !== productId
+    );
+
+    const deletedProduct = displayProducts.find(
+      (product) => product.id === productId
+    );
+    const deletedQuantity = deletedProduct ? deletedProduct.quantity : 0;
+    const newTotal = total - deletedProduct.price * deletedQuantity;
+
+    setDisplayProducts(updatedDisplayProducts);
+    setPayProducts(updatedPayProducts);
+    setTotal(newTotal);
+  };
+
   console.log(payProducts);
 
   return (
@@ -238,9 +291,11 @@ export default function PointOfSale() {
                 <tr className="text-white text-lg">
                   <th className="tracking-wide">Amount</th>
                   <th className="tracking-wide">Product</th>
+                  <th className="tracking-wide">Cost</th>
                   <th className="tracking-wide">Price</th>
                   <th className="tracking-wide">Qty</th>
                   <th className="tracking-wide">Edit Quantity</th>{" "}
+                  <th className="tracking-wide">Action</th>{" "}
                 </tr>
               </thead>
               <tbody>
@@ -252,6 +307,7 @@ export default function PointOfSale() {
                         {product.price * product.quantity}
                       </td>
                       <td className="p-3">{product.product}</td>
+                      <td className="p-3">{product.cost}</td>
                       <td className="p-3 flex items-center justify-center">
                         <TbCurrencyPeso />
                         {product.price}
@@ -263,6 +319,14 @@ export default function PointOfSale() {
                           className="bg-prime px-4 py-2 rounded text-white font-semibold hover:bg-sky-500"
                         >
                           Edit
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="bg-red-500 px-4 py-2 rounded text-white font-semibold hover:bg-red-600"
+                        >
+                          remove
                         </button>
                       </td>
                     </tr>
@@ -348,23 +412,123 @@ export default function PointOfSale() {
               Total:
               <strong className="text-lg pl-1 flex items-center">
                 <TbCurrencyPeso />
-                {displayProducts.reduce(
-                  (total, product) => total + product.price * product.quantity,
-                  0
-                )}
+                {totalSelected}
               </strong>
             </span>
-            <button
-              onClick={handlePay}
-              className="bg-prime text-white py-2 px-4 rounded hover:bg-sky-500"
-            >
-              Pay Now
-            </button>
+            <div>
+              <button
+                onClick={calculateDiscount}
+                className="bg-prime text-white py-2 px-4 rounded hover:bg-sky-500 mr-2"
+              >
+                Calculate Discount
+              </button>
+              <button
+                onClick={customerOpen}
+                className="bg-prime text-white py-2 px-4 rounded hover:bg-sky-500"
+              >
+                Proceed to Payment
+              </button>
+            </div>
           </div>
+          <span className="text-sm text-gray-500 mt-2">
+            <span className="border-2 w-[16%] border-prime px-2 py-1 rounded text-prime flex items-center">
+              Calculated Discount:
+              <strong className="text-lg pl-1 flex items-center">
+                <TbCurrencyPeso />
+                {calculatedDiscount.toFixed(2)}
+              </strong>
+            </span>
+          </span>
         </div>
       </div>
+
+      {customer && (
+        <Transition appear show={true} as={Fragment}>
+          <Dialog as="div" className="relative z-10" onClose={closeCustomer}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      Customer
+                    </Dialog.Title>
+                    <div className="mt-2">
+                      <label htmlFor="cash">cash: </label>
+                      <input
+                        type="number"
+                        value={customerPay}
+                        onChange={(e) => setCustomerPay(e.target.value)}
+                        placeholder="cash"
+                        name="cash"
+                        id="cash"
+                      />
+                    </div>
+
+                    <div className="mt-2">
+                      <label htmlFor="checkbox">Discounted: </label>
+                      <input
+                        type="checkbox"
+                        checked={isDiscounted}
+                        onChange={(e) => setIsDiscounted(e.target.checked)}
+                        name="checkbox"
+                        id="checkbox"
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={() => handlePay()}
+                      >
+                        Pay
+                      </button>
+                      <button
+                        type="button"
+                        className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={() => closeCustomer()}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+      )}
+
       {showReceiptModal && (
-        <Reciept sale={receipt} closeModal={handleCloseReceiptModal} />
+        <Reciept
+          sale={receipt}
+          cash={customerPay}
+          closeModal={handleCloseReceiptModal}
+          isDiscounted={isDiscounted}
+        />
       )}
     </div>
   );

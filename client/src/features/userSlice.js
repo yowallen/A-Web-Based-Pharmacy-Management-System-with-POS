@@ -139,9 +139,9 @@ export const getProducts = createAsyncThunk("user/getproduct", async () => {
 
 export const createSales = createAsyncThunk(
   "user/createsales",
-  async ({ payProducts, toast }, { rejectWithValue }) => {
+  async ({ sales, isDiscounted, toast }, { rejectWithValue }) => {
     try {
-      const response = await userService.createSales(payProducts);
+      const response = await userService.createSales({ sales, isDiscounted });
       toast.success("Pay Successful");
       return response.data;
     } catch (error) {

@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getProducts } from "../features/userSlice";
-import { useEffect } from "react";
+import { lowProducts } from "../features/userSlice";
+import LowProductsTable from "../components/LowProductsTable";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import InventoryTable from "../components/InventoryTable";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
 
-export default function Inventory() {
+const LowProducts = () => {
+  const componentRef = useRef();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, products } = useSelector((state) => state.user);
+  const { user, lowProduct } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
-    dispatch(getProducts());
-  }, [dispatch, getProducts, navigate]);
-
-  console.log(products);
+    dispatch(lowProducts());
+  }, [dispatch, lowProducts, navigate]);
 
   const [search, setSearch] = useState("");
-  const filteredProducts = products.filter((category) => {
+  const filteredProducts = lowProduct.filter((category) => {
     if (search === "") {
       return true; // Render all categories when search is empty
     }
@@ -35,10 +35,14 @@ export default function Inventory() {
   });
 
   return (
-    <InventoryTable
-      data={filteredProducts}
-      search={search}
-      setSearch={setSearch}
-    />
+    <>
+      <LowProductsTable
+        data={filteredProducts}
+        search={search}
+        setSearch={setSearch}
+      />
+    </>
   );
-}
+};
+
+export default LowProducts;

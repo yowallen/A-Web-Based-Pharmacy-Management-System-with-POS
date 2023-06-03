@@ -1,7 +1,7 @@
 import React from "react";
 import { getProducts } from "../features/userSlice";
 
-const Reciept = ({ sale, closeModal }) => {
+const Reciept = ({ sale, closeModal, cash, isDiscounted }) => {
   // function printReceipt() {
   //   const printContents = document.getElementById("receipt").innerHTML;
   //   const originalContents = document.body.innerHTML;
@@ -13,6 +13,7 @@ const Reciept = ({ sale, closeModal }) => {
   //     document.body.innerHTML = originalContents;
   //   }, 100);
   // }
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -44,50 +45,66 @@ const Reciept = ({ sale, closeModal }) => {
 
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Receipt
+                    Invoice
                   </h3>
-                  <div className="max-h-96 overflow-y-auto">
-                    {sale &&
-                      sale.map((sale) => (
-                        <table className="table-fixed w-full mt-4 text-sm">
-                          <tbody>
-                            <tr>
-                              <td className="font-medium text-gray-500 pr-4 w-1/4">
+                  <div>
+                    <table className="w-full mt-4 text-sm">
+                      <tbody>
+                        {sale.sales &&
+                          sale.sales.map((sale) => (
+                            <tr key={sale.receipt}>
+                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
                                 Product:
                               </td>
-                              <td className="w-3/4">{sale.product}</td>
-                            </tr>
-                            <tr>
-                              <td className="font-medium text-gray-500 pr-4">
+                              <td className="border-b border-gray-200">
+                                {sale.product}
+                              </td>
+                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
                                 Price:
                               </td>
-                              <td>{sale.price}</td>
-                            </tr>
-                            <tr>
-                              <td className="font-medium text-gray-500 pr-4">
+                              <td className="border-b border-gray-200">
+                                {sale.price}
+                              </td>
+                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
                                 Quantity:
                               </td>
-                              <td>{sale.quantity}</td>
-                            </tr>
-                            <tr>
-                              <td className="font-medium text-gray-500 pr-4">
+                              <td className="border-b border-gray-200">
+                                {sale.quantity}
+                              </td>
+                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
                                 Total:
                               </td>
-                              <td>{sale.total}</td>
+                              <td className="border-b border-gray-200">
+                                {sale.total}
+                              </td>
                             </tr>
-                          </tbody>
-                        </table>
-                      ))}
+                          ))}
+                      </tbody>
+                    </table>
                     <p className="text-sm text-gray-500 mt-4">
-                      Overall Total:
-                      {sale &&
-                        sale.reduce((total, item) => {
-                          return total + item.total;
+                      Overall Total:{" "}
+                      {sale.sales &&
+                        sale.sales.reduce((total, item) => {
+                          return total + item.price * item.quantity;
                         }, 0)}
                       <br />
-                      Receipt: {sale && sale.length > 0 && sale[0].receipt}
-                      <br /> Sold By:{" "}
-                      {sale && sale.length > 0 && sale[0].soldBy}
+                      {sale.discountedTotal && (
+                        <>
+                          Discounted Total: {sale.discountedTotal}
+                          <br />
+                        </>
+                      )}
+                      Cash: {cash} <br />
+                      change:{" "}
+                      {isDiscounted
+                        ? (cash - sale.discountedTotal).toFixed(2)
+                        : (cash - sale.totalSales).toFixed(2)}{" "}
+                      <br />
+                      Receipt:{" "}
+                      {sale.sales &&
+                        sale.sales.length > 0 &&
+                        sale.sales[0].receipt}
+                      <br /> Sold By: {sale.soldBy}
                       <br />
                     </p>
                   </div>

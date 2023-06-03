@@ -1,23 +1,22 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import BarChart from "../components/BarChart";
-import {FaCaretRight} from "react-icons/fa";
-import {Link} from "react-router-dom";
-import {useSelector, useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {getMonthSales, topProducts} from "../features/userSlice";
+import { FaCaretRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getMonthSales } from "../features/userSlice";
 
 export default function Sales() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {monthSales, user, topProduct} = useSelector((state) => state.user);
+  const { monthSales, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
     dispatch(getMonthSales());
-    dispatch(topProducts());
   }, [dispatch, getMonthSales, navigate]);
 
   const chartData = {
@@ -29,27 +28,9 @@ export default function Sales() {
         data: monthSales.map((sales) => sales.sales),
       },
       {
-        label: "Highest Sales",
+        label: "Total Cost",
         backgroundColor: "gold",
-        data: topProduct.map((product) => product.sales),
-        // Add a custom tooltip function to show the topProduct label
-        // alongside the sales data
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const label = context.dataset.label || "";
-              if (label) {
-                const topProductValue =
-                  topProduct[context.dataIndex]?.topProduct || "N/A";
-                return `${label}: ${context.formattedValue} (${topProductValue})`;
-              } else {
-                const topProductValue =
-                  topProduct[context.dataIndex]?.topProduct || "N/A";
-                return `${context.formattedValue} (${topProductValue})`;
-              }
-            },
-          },
-        },
+        data: monthSales.map((sales) => sales.cost),
       },
     ],
   };

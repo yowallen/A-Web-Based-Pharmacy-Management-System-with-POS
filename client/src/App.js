@@ -16,6 +16,8 @@ import Dashboard from "./pages/Dashboard";
 import TotalOrders from "./pages/TotalOrders";
 import PointOfSale from "./pages/PointOfSale";
 import History from "./pages/History";
+import LowProducts from "./pages/LowProducts";
+import NewProducts from "./pages/NewProducts";
 
 import { Toaster } from "react-hot-toast";
 
@@ -34,6 +36,8 @@ function App() {
           <Route path="manage" element={<ManageUsers />} />
           <Route path="pos" element={<PointOfSale />} />
           <Route path="history" element={<History />} />
+          <Route path="low" element={<LowProducts />} />
+          <Route path="new" element={<NewProducts />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Route>

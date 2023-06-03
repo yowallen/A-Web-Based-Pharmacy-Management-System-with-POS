@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {toast} from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
-import {addProduct, getCategories, getProducts} from "../features/userSlice";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { addProduct, getCategories, getProducts } from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -22,6 +22,7 @@ export default function Products() {
     prescriptionRequired: false,
     quantity: 0,
     productLimit: 0,
+    cost: 0,
   });
 
   const {
@@ -35,6 +36,7 @@ export default function Products() {
     prescriptionRequired,
     quantity,
     productLimit,
+    cost,
   } = productData;
 
   console.log(typeof productLimit);
@@ -45,7 +47,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const {user, categories, products} = useSelector((state) => state.user);
+  const { user, categories, products } = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -63,7 +65,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({productData, toast}));
+    dispatch(addProduct({ productData, toast }));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -76,6 +78,7 @@ export default function Products() {
       prescriptionRequired: false,
       quantity: 0,
       productLimit: 0,
+      cost: 0,
     });
     dispatch(getCategories());
   };
@@ -229,11 +232,23 @@ export default function Products() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{resize: "none"}}
+                        style={{ resize: "none" }}
                         name="description"
                         value={description}
                         onChange={(e) => onChange(e)}
                       ></textarea>
+                    </div>
+
+                    <div className="flex-col">
+                      <label className={label}>Cost</label>
+                      <input
+                        type="number"
+                        className={input}
+                        placeholder="Enter suggested price"
+                        name="cost"
+                        value={cost}
+                        onChange={(e) => onChange(e)}
+                      />
                     </div>
 
                     <div className="flex-col">
@@ -257,6 +272,7 @@ export default function Products() {
                         name="expiryDate"
                         value={expiryDate}
                         onChange={(e) => onChange(e)}
+                        min={new Date().toISOString().split("T")[0]}
                       />
                     </div>
 

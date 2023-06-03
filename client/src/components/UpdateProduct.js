@@ -116,6 +116,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={quantity}
             onChange={handleChange}
             name="quantity"
+            min={0}
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label

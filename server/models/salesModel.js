@@ -16,6 +16,9 @@ const salesSchema = new mongoose.Schema(
     soldBy: {
       type: String,
     },
+    cost: {
+      type: Number,
+    },
     price: {
       type: Number,
     },

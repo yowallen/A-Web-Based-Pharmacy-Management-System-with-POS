@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
-const Expired = require("../models/expiredModel");
 const Sales = require("../models/salesModel");
 const uniqid = require("uniqid");
 
@@ -146,6 +145,7 @@ const addProduct = asyncHandler(async (req, res) => {
     expiryDate,
     prescriptionRequired,
     productLimit,
+    cost,
   } = req.body;
 
   if (
@@ -188,6 +188,7 @@ const addProduct = asyncHandler(async (req, res) => {
     stockedAvailable: quantity,
     isExpired: false,
     productLimit,
+    cost,
   });
   if (product) {
     res.status(201).json({
@@ -205,6 +206,7 @@ const addProduct = asyncHandler(async (req, res) => {
       stockedIn: product.stockedIn,
       stockedAvailable: product.stockedAvailable,
       productLimit: product.productLimit,
+      cost: product.cost,
     });
   } else {
     res.status(400);
@@ -276,7 +278,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const createSales = asyncHandler(async (req, res) => {
   try {
-    const sales = req.body;
+    const { sales, isDiscounted } = req.body;
 
     // Calculate total price for each sale and update product quantity
     const savedSales = await Promise.all(
@@ -294,7 +296,10 @@ const createSales = asyncHandler(async (req, res) => {
         }
 
         // Calculate the total price of the sale
-        const total = product.price * quantity;
+        let total = product.price * quantity;
+
+        // Calculate the total cost of the sale
+        let cost = product.cost * quantity;
 
         const receipt = uniqid();
 
@@ -304,7 +309,8 @@ const createSales = asyncHandler(async (req, res) => {
           quantity: quantity,
           price: product.price,
           total: total,
-          soldBy: req.user.fullName, //from auth middleware
+          soldBy: req.user.fullName,
+          cost: cost,
           receipt: receipt,
         });
 
@@ -326,8 +332,26 @@ const createSales = asyncHandler(async (req, res) => {
       0
     );
 
-    // Return the saved sales and total price
-    res.status(201).json(savedSales, totalSales, req.user.fullName);
+    let discountedTotal = null;
+    if (isDiscounted) {
+      // Apply a 20% discount to the total price
+      discountedTotal = (totalSales * 0.8).toFixed(2);
+    }
+
+    // Prepare the response object
+    const response = {
+      sales: savedSales,
+      totalSales,
+      soldBy: req.user.fullName,
+    };
+
+    // Add discountedTotal field if isDiscounted is true
+    if (isDiscounted) {
+      response.discountedTotal = discountedTotal;
+    }
+
+    // Return the response
+    res.status(201).json(response);
   } catch (error) {
     res.status(400).json({
       message: error.message,
@@ -376,7 +400,7 @@ const getSalesCountToday = asyncHandler(async (req, res) => {
   try {
     //get only today's sales
     const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     const sales = await Sales.find({
       createdAt: {
@@ -424,7 +448,7 @@ const getSales = asyncHandler(async (req, res) => {
 const getSalesToday = asyncHandler(async (req, res) => {
   //get only today's sales
   const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
   const sales = await Sales.find({
     createdAt: {
@@ -441,50 +465,62 @@ const getTotalSalesByMonth = asyncHandler(async (req, res) => {
     {
       month: "January",
       sales: 0,
+      cost: 0,
     },
     {
       month: "February",
       sales: 0,
+      cost: 0,
     },
     {
       month: "March",
       sales: 0,
+      cost: 0,
     },
     {
       month: "April",
       sales: 0,
+      cost: 0,
     },
     {
       month: "May",
       sales: 0,
+      cost: 0,
     },
     {
       month: "June",
       sales: 0,
+      cost: 0,
     },
     {
       month: "July",
       sales: 0,
+      cost: 0,
     },
     {
       month: "August",
       sales: 0,
+      cost: 0,
     },
     {
       month: "September",
       sales: 0,
+      cost: 0,
     },
     {
       month: "October",
       sales: 0,
+      cost: 0,
     },
     {
       month: "November",
       sales: 0,
+      cost: 0,
     },
     {
       month: "December",
       sales: 0,
+      cost: 0,
     },
   ];
 
@@ -497,12 +533,17 @@ const getTotalSalesByMonth = asyncHandler(async (req, res) => {
         totalSales: {
           $sum: "$total",
         },
+        totalCost: {
+          $sum: "$cost",
+        },
       },
     },
   ]);
 
   sales.forEach((sale) => {
-    months[sale._id.month - 1].sales = sale.totalSales;
+    const monthIndex = sale._id.month - 1;
+    months[monthIndex].sales = sale.totalSales;
+    months[monthIndex].cost = sale.totalCost;
   });
 
   res.json(months);

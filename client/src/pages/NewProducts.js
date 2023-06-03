@@ -1,30 +1,30 @@
 import { FaCaretRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { getSales } from "../features/userSlice";
+import { getProducts } from "../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbCurrencyPeso } from "react-icons/tb";
 
-export default function History() {
+export default function NewProducts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
-  const { salesHistory, user } = useSelector((state) => state.user);
+  const { products, user } = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
 
   useEffect(() => {
     if (!user) navigate("/login");
-    dispatch(getSales());
+    dispatch(getProducts());
     setSelectedMonth(new Date().toISOString().slice(0, 7)); // Reset the selected month to the current month
   }, [dispatch, navigate, user]);
 
   useEffect(() => {
     // Filter the sales history based on the selected month
-    const filteredSalesHistory = salesHistory.filter((sale) => {
+    const filteredSalesHistory = products.filter((sale) => {
       try {
         const saleDate = new Date(sale.createdAt);
         if (isNaN(saleDate.getTime())) {
@@ -39,23 +39,22 @@ export default function History() {
       }
     });
     setSortedSalesHistory(filteredSalesHistory);
-  }, [salesHistory, selectedMonth]); // Include sortedSalesHistory in the dependency array
+  }, [products, selectedMonth]); // Include sortedSalesHistory in the dependency array
 
   function downloadCSV() {
-    const total = sortedSalesHistory.reduce((acc, sale) => acc + sale.total, 0);
-
     const rows = [
-      ["Date", "Product", "Amount", "Sold by"],
-      ...sortedSalesHistory.map((sale) => [
-        new Date(sale.createdAt).toLocaleDateString(),
-        sale.product,
-        sale.price,
-        sale.soldBy,
+      ["Date", "Product", "Stocks", "Category", "Price", "Cost"],
+      ...sortedSalesHistory.map((product) => [
+        new Date(product.createdAt).toLocaleDateString(),
+        product.productName,
+        product.quantity,
+        product.category,
+        product.price,
+        product.cost,
       ]),
-      ["Total", "", total.toString(), ""],
     ];
 
-    const filename = "sales_history";
+    const filename = "products_history";
 
     if (Array.isArray(rows)) {
       const csvContent =
@@ -85,7 +84,7 @@ export default function History() {
         History
       </h1>
       <div>
-        <h2 className="text-lg mt-6">Order History - Report Data</h2>
+        <h2 className="text-lg mt-6">New Products - Report Data</h2>
         <div className="flex-col">
           <div className="flex items-center justify-between pb-4">
             <div>
@@ -97,19 +96,6 @@ export default function History() {
                 onChange={(e) => setSelectedMonth(e.target.value)}
               />
             </div>
-
-            {sortedSalesHistory.length > 0 && (
-              <div className=" flex items-center border-2 border-prime rounded px-3 py-1 text-lg text-gray-700">
-                Total Amount:{" "}
-                <p className="flex items-center">
-                  <TbCurrencyPeso />
-                  {sortedSalesHistory.reduce(
-                    (total, sale) => total + sale.total,
-                    0
-                  )}
-                </p>
-              </div>
-            )}
 
             <button
               onClick={downloadCSV}
@@ -124,23 +110,27 @@ export default function History() {
                 <tr className="flex justify-between items-center text-lg text-center w-full">
                   <th className="w-full">Date</th>
                   <th className="w-full">Product</th>
-                  <th className="w-full">Amount</th>
-                  <th className="w-full">Sold by</th>
+                  <th className="w-full">Stocks</th>
+                  <th className="w-full">Category</th>
+                  <th className="w-full">Price</th>
+                  <th className="w-full">Cost</th>
                 </tr>
-                {salesHistory &&
-                  salesHistory.length > 0 &&
-                  sortedSalesHistory.map((sale) => (
+                {products &&
+                  products.length > 0 &&
+                  sortedSalesHistory.map((product) => (
                     <tr
-                      key={sale._id}
+                      key={product._id}
                       className="flex justify-between text-sm font-light text-center"
                     >
                       <td className="w-full">
-                        {sale.createdAt &&
-                          new Date(sale.createdAt).toLocaleDateString()}
+                        {product.createdAt &&
+                          new Date(product.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="w-full">{sale.product}</td>
-                      <td className="w-full">{sale.total}</td>
-                      <td className="w-full">{sale.soldBy}</td>
+                      <td className="w-full">{product.productName}</td>
+                      <td className="w-full">{product.quantity}</td>
+                      <td className="w-full">{product.category}</td>
+                      <td className="w-full">{product.price}</td>
+                      <td className="w-full">{product.cost}</td>
                     </tr>
                   ))}
               </tbody>
