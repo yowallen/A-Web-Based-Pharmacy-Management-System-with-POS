@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { addProduct, getCategories, getProducts } from "../features/userSlice";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -47,7 +47,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const { user, categories, products } = useSelector((state) => state.user);
+  const {user, categories, products} = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -65,7 +65,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({ productData, toast }));
+    dispatch(addProduct({productData, toast}));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -223,20 +223,6 @@ export default function Products() {
                         value={productLimit}
                         onChange={(e) => onChange(e)}
                       />
-                    </div>
-
-                    <div className="flex-col">
-                      <label className={label}>Description</label>
-                      <textarea
-                        id=""
-                        rows="5"
-                        className={input}
-                        placeholder="Enter description"
-                        style={{ resize: "none" }}
-                        name="description"
-                        value={description}
-                        onChange={(e) => onChange(e)}
-                      ></textarea>
                     </div>
 
                     <div className="flex-col">

@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, {useRef} from "react";
 import DataTable from "react-data-table-component";
-import { BiSearchAlt } from "react-icons/bi";
+import {BiSearchAlt} from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-const LowProductsTable = ({ data, search, setSearch }) => {
+const LowProductsTable = ({data, search, setSearch}) => {
   const customStyles = {
     header: {
       style: {
@@ -52,7 +52,7 @@ const LowProductsTable = ({ data, search, setSearch }) => {
   const handleDownload = async () => {
     const dataTableElement = tableRef.current;
 
-    html2canvas(dataTableElement, { scale: 2 }).then((canvas) => {
+    html2canvas(dataTableElement, {scale: 2}).then((canvas) => {
       const screenshotDataUrl = canvas.toDataURL("image/png");
       const printWindow = window.open("", "_blank");
       printWindow.document.open();
@@ -133,20 +133,29 @@ const LowProductsTable = ({ data, search, setSearch }) => {
           subHeader
           subHeaderAlign="left"
           subHeaderComponent={
-            <div className={`flex items-center "hide-in-print"`}>
-              <BiSearchAlt />
-              <input
-                type="text"
-                className="w-72 ml-4 text-sm font-normal p-2 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search Product Name"
-              />
+            <div
+              className={`flex items-center justify-between w-full "hide-in-print"`}
+            >
+              <div className="flex items-center">
+                <BiSearchAlt />
+                <input
+                  type="text"
+                  className="w-72 ml-4 text-sm font-normal p-2 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search Product Name"
+                />
+              </div>
+              <button
+                className="text-sm px-4 py-2 bg-prime text-white rounded-md hover:bg-sec"
+                onClick={handleDownload}
+              >
+                Download Table
+              </button>
             </div>
           }
         />
       </div>
-      <button onClick={handleDownload}>Download Table</button>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React from "react";
-import { getProducts } from "../features/userSlice";
 
-const Reciept = ({ sale, closeModal, cash, isDiscounted }) => {
+const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
   // function printReceipt() {
   //   const printContents = document.getElementById("receipt").innerHTML;
   //   const originalContents = document.body.innerHTML;
@@ -47,41 +46,65 @@ const Reciept = ({ sale, closeModal, cash, isDiscounted }) => {
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Invoice
                   </h3>
+                  <p className="text-base ">
+                    CORISOTO's Pharmacy and Dentistry
+                  </p>
+                  <p className="text-base">
+                    145 J. P. Rizal St, Balite, Rodriguez, 1860 Rizal
+                  </p>
+                  <p className="text-sm text text-gray-500 mb-4">
+                    Receipt:{" "}
+                    {sale.sales &&
+                      sale.sales.length > 0 &&
+                      sale.sales[0].receipt}
+                    <br /> Sold By: {sale.soldBy}
+                    <br />
+                  </p>
                   <div>
-                    <table className="w-full mt-4 text-sm">
+                    <table className="w-full mt-4">
+                      <thead>
+                        <tr className="text-base">
+                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                            PRODUCT:
+                          </th>
+                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                            PRICE:
+                          </th>
+                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                            QTY:
+                          </th>
+                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                            TOTAL:
+                          </th>
+                        </tr>
+                      </thead>
                       <tbody>
                         {sale.sales &&
                           sale.sales.map((sale) => (
-                            <tr key={sale.receipt}>
-                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
-                                Product:
-                              </td>
-                              <td className="border-b border-gray-200">
+                            <tr
+                              key={sale.receipt}
+                              className="text-sm font-medium"
+                            >
+                              <td className="border-b border-gray-200 p-1">
                                 {sale.product}
                               </td>
-                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
-                                Price:
-                              </td>
-                              <td className="border-b border-gray-200">
+
+                              <td className="border-b border-gray-200 p-1">
                                 {sale.price}
                               </td>
-                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
-                                Quantity:
-                              </td>
-                              <td className="border-b border-gray-200">
+
+                              <td className="border-b border-gray-200 p-1">
                                 {sale.quantity}
                               </td>
-                              <td className="font-medium text-gray-500 px-2 py-1 border-b border-gray-200">
-                                Total:
-                              </td>
-                              <td className="border-b border-gray-200">
+
+                              <td className="border-b border-gray-200 p-1">
                                 {sale.total}
                               </td>
                             </tr>
                           ))}
                       </tbody>
                     </table>
-                    <p className="text-sm text-gray-500 mt-4">
+                    <p className="text-sm text-right text-gray-500 mt-4">
                       Overall Total:{" "}
                       {sale.sales &&
                         sale.sales.reduce((total, item) => {
@@ -99,12 +122,6 @@ const Reciept = ({ sale, closeModal, cash, isDiscounted }) => {
                       {isDiscounted
                         ? (cash - sale.discountedTotal).toFixed(2)
                         : (cash - sale.totalSales).toFixed(2)}{" "}
-                      <br />
-                      Receipt:{" "}
-                      {sale.sales &&
-                        sale.sales.length > 0 &&
-                        sale.sales[0].receipt}
-                      <br /> Sold By: {sale.soldBy}
                       <br />
                     </p>
                   </div>
