@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateProduct } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {updateProduct} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 
-const UpdateProduct = ({ product, categories, user }) => {
+const UpdateProduct = ({product, categories, user}) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -145,20 +145,6 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={price}
             onChange={handleChange}
             name="price"
-            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
-          />
-          <label
-            htmlFor="description"
-            className="font-semibold text-gray-700 text-md"
-          >
-            description:
-          </label>
-          <input
-            type="text"
-            id="description"
-            value={description}
-            onChange={handleChange}
-            name="description"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
           <label

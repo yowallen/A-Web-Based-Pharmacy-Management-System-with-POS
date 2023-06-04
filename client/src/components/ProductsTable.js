@@ -57,8 +57,8 @@ export default function ProductsTable({
             </div>
             <div className="font-light">
               <p>Measurement: {row.measurement}</p>
-              <p>Type: {row.productType}</p>
-              <p>Description: {row.description}</p>
+              <p>Description: {row.productType}</p>
+              <p>Limit: {row.productLimit}</p>
             </div>
           </div>
         ) : (
@@ -69,8 +69,8 @@ export default function ProductsTable({
             </div>
             <div className="font-light">
               <p>Measurement: {row.measurement}</p>
-              <p>Type: {row.productType}</p>
-              <p>Description: {row.description}</p>
+              <p>Description: {row.productType}</p>
+              <p>Limit: {row.productLimit}</p>
             </div>
           </div>
         ),
@@ -90,6 +90,15 @@ export default function ProductsTable({
       cell: (row) => (
         <span className="flex items-center">
           <TbCurrencyPeso /> {row.price}
+        </span>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Cost",
+      cell: (row) => (
+        <span className="flex items-center">
+          <TbCurrencyPeso /> {row.cost}
         </span>
       ),
       sortable: true,

@@ -1,5 +1,5 @@
-import React, { useEffect, Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import {
   FaShoppingBag,
   FaChartBar,
@@ -7,23 +7,36 @@ import {
   FaArrowCircleRight,
   FaHistory,
 } from "react-icons/fa";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {TbCurrencyPeso} from "react-icons/tb";
+import {RiAlarmWarningLine} from "react-icons/ri";
+import {IoWarningOutline} from "react-icons/io5";
+import {HiTemplate} from "react-icons/hi";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
+  getCostToday,
   productCount,
   topProducts,
   lowProducts,
   getAlmostExpired,
   getProducts,
 } from "../features/userSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Products from "./Products";
+import {useSelector, useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {
+    salesToday,
+    salesCountToday,
+    getCostToday,
+    productsCount,
+    user,
+    lowProduct,
+    almostExpired,
+    products,
+  } = useSelector((state) => state.user);
 
   let [isOpen, setIsOpen] = useState(false);
 
@@ -54,17 +67,7 @@ export default function Dashboard() {
     dispatch(lowProducts());
     dispatch(getAlmostExpired());
     dispatch(getProducts());
-  }, [dispatch, navigate]);
-
-  const {
-    salesToday,
-    salesCountToday,
-    productsCount,
-    user,
-    lowProduct,
-    almostExpired,
-    products,
-  } = useSelector((state) => state.user);
+  }, [dispatch, navigate, user]);
 
   useEffect(() => {
     if (lowProduct.length > 0) {
@@ -82,8 +85,8 @@ export default function Dashboard() {
     }
   }, [dispatch, almostExpired, navigate, getAlmostExpired]);
 
-  const [showNotificationText, setShowNotificationText] = useState(false);
-  const [showExNotificationText, setExShowNotificationText] = useState(false);
+  const [showNotificationText, setShowNotificationText] = useState(true);
+  const [showExNotificationText, setExShowNotificationText] = useState(true);
 
   // Function to handle notification click
   const handleNotificationClick = () => {
@@ -97,21 +100,21 @@ export default function Dashboard() {
   const card = "py-3 px-6";
 
   return (
-    <div className="font-pop h-full w-full">
+    <div className="font-pop h-full w-full overflow-y-hidden">
       <h1 className="font-mont">Dashboard</h1>
 
-      <div className="flex justify-between py-3 my-4 text-ter">
+      <div className="flex justify-between pt-3 my-4 text-ter">
         <div className="flex-col w-5/12">
           <div className={`${card} bg-amber-500`}>
-            <span>Total Sales</span>
+            <span>Total Earnings Today</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.totalSales}</p>)}
       {error && <p>{error}</p>} */}
             <p className="flex items-center">
               <TbCurrencyPeso />
-              {salesToday}
+              {salesToday - getCostToday}
             </p>
             <span className="flex justify-end">
-              <FaChartBar style={{ fontSize: "6rem", color: "#b45309" }} />
+              <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
             </span>
           </div>
           <div className="bg-amber-700 font-normal text-base">
@@ -126,12 +129,15 @@ export default function Dashboard() {
 
         <div className="flex-col w-5/12">
           <div className={`${card} bg-emerald-600`}>
-            <span>Number of Orders</span>
+            <span>Todays Total Order</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
       {error && <p>{error}</p>} */}
-            <p>{salesCountToday}</p>
+            <p className="flex items-center gap-x-2">
+              {salesCountToday}{" "}
+              <p className="text-base">orders been processed</p>
+            </p>
             <span className="flex justify-end">
-              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
+              <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
             </span>
           </div>
           <div className="bg-emerald-800 font-normal text-base">
@@ -145,66 +151,82 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex justify-between py-3 my-8 text-ter">
+      <div className="flex justify-between pt-3 my-8 text-ter">
         <div className="flex-col w-5/12">
           <div className={`${card} bg-sky-500`}>
             <span>Total Products</span>
             {/* /* {data && data.map((data) => <p key={data.id}>{data.totalProd}</p>)}
             {error && <p>{error}</p>} */}
-            <p>{productsCount}</p>
+            <p className="flex items-center gap-x-2">
+              {productsCount} <p className="text-base">products</p>
+            </p>
             {isOpen && (
-              <div
-                style={{
-                  position: "fixed",
-                  bottom: "80px",
-                  right: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "40px",
-                  height: "40px",
-                  backgroundColor: "red",
-                  borderRadius: "50%",
-                  color: "white",
-                  fontSize: "12px",
-                  fontWeight: "bold",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                  cursor: "pointer",
-                  zIndex: "999",
-                }}
-                onClick={handleNotificationClick}
-              >
-                {lowProduct.length}
-              </div>
+              <>
+                <div
+                  style={{
+                    position: "fixed",
+                    bottom: "200px",
+                    right: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "35px",
+                    height: "35px",
+                    backgroundColor: "red",
+                    borderRadius: "50%",
+                    color: "white",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                    zIndex: "999",
+                  }}
+                >
+                  {lowProduct.length}
+                </div>
+                <div
+                  onClick={handleNotificationClick}
+                  className="fixed cursor-pointer p-4 text-3xl bg-prime rounded-full bottom-[165px] right-8 hover:bg-sec"
+                >
+                  <IoWarningOutline />
+                </div>
+              </>
             )}
 
             {expireisOpen && (
-              <div
-                style={{
-                  position: "fixed",
-                  bottom: "150px",
-                  right: "20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "40px",
-                  height: "40px",
-                  backgroundColor: "red",
-                  borderRadius: "50%",
-                  color: "white",
-                  fontSize: "12px",
-                  fontWeight: "bold",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                  cursor: "pointer",
-                  zIndex: "999",
-                }}
-                onClick={handleExNotificationClick}
-              >
-                {almostExpired.length}
-              </div>
+              <>
+                <div
+                  style={{
+                    position: "fixed",
+                    bottom: "110px",
+                    right: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "35px",
+                    height: "35px",
+                    backgroundColor: "red",
+                    borderRadius: "50%",
+                    color: "white",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                    zIndex: "999",
+                  }}
+                >
+                  {almostExpired.length}
+                </div>
+                <div
+                  onClick={handleExNotificationClick}
+                  className="fixed cursor-pointer p-4 text-3xl bg-prime rounded-full bottom-[70px] right-8 hover:bg-sec"
+                >
+                  <RiAlarmWarningLine />
+                </div>
+              </>
             )}
             <span className="flex justify-end">
-              <FaShoppingBag style={{ fontSize: "6rem", color: "#0369a1" }} />
+              <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
             </span>
           </div>
           <div className="bg-sky-700 font-normal text-base">
@@ -221,7 +243,7 @@ export default function Dashboard() {
           <div className={`${card} bg-red-500`}>
             <span>Order History</span>
             <span className="flex justify-end">
-              <FaHistory style={{ fontSize: "8.1rem", color: "#991b1b" }} />
+              <FaHistory style={{fontSize: "8.1rem", color: "#991b1b"}} />
             </span>
           </div>
           <div className="bg-red-800 font-normal text-base">
@@ -235,21 +257,25 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex justify-between py-3 my-8 text-ter">
+      <div className="flex justify-center pt-3 my-8 text-ter">
         <div className="flex-col w-5/12">
-          <div className={`${card} bg-emerald-600`}>
-            <span>Updated Products</span>
+          <div className={`${card} bg-purple-400`}>
+            <span>New Products</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
       {error && <p>{error}</p>} */}
-            <p>
+            <p className="flex items-center gap-x-2">
+              <p>Recent:</p>
               {products.length &&
                 `${products[0].productName} (${products[0].quantity})`}
             </p>
             <span className="flex justify-end">
-              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
+              <HiTemplate
+                className="text-purple-600"
+                style={{fontSize: "6rem"}}
+              />
             </span>
           </div>
-          <div className="bg-emerald-800 font-normal text-base">
+          <div className="bg-purple-600 font-normal text-base">
             <Link to="/new">
               <div className="flex items-center justify-center gap-x-2">
                 <span>More Info</span>
@@ -260,12 +286,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {showNotificationText && (
+      {isOpen && showNotificationText && (
         <div
           style={{
             position: "fixed",
-            bottom: "80px",
-            right: "70px",
+            bottom: "160px",
+            right: "110px",
             backgroundColor: "white",
             padding: "10px",
             borderRadius: "5px",
@@ -284,18 +310,21 @@ export default function Dashboard() {
           >
             You have {lowProduct.length} low product(s).
           </p>
-          <p style={{ fontSize: "12px", color: "#666" }}>
+          <p
+            className="hover:underline hover:text-red-500 text-red-700"
+            style={{fontSize: "12px"}}
+          >
             Click here to view more details.
           </p>
         </div>
       )}
 
-      {showExNotificationText && (
+      {expireisOpen && showExNotificationText && (
         <div
           style={{
             position: "fixed",
-            bottom: "80px",
-            right: "70px",
+            bottom: "60px",
+            right: "110px",
             backgroundColor: "white",
             padding: "10px",
             borderRadius: "5px",
@@ -303,7 +332,7 @@ export default function Dashboard() {
             cursor: "pointer",
             zIndex: "999",
           }}
-          onClick={() => navigate("/products")}
+          onClick={() => navigate("/expired")}
         >
           <p
             style={{
@@ -314,7 +343,10 @@ export default function Dashboard() {
           >
             You have {almostExpired.length} almost expired product(s).
           </p>
-          <p style={{ fontSize: "12px", color: "#666" }}>
+          <p
+            className="hover:underline hover:text-red-500 text-red-700"
+            style={{fontSize: "12px"}}
+          >
             Click here to view more details.
           </p>
         </div>

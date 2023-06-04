@@ -34,7 +34,7 @@ export default function Root() {
 
   useEffect(() => {
     if (!user) navigate("/login");
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, user]);
 
   return (
     <div className="flex">
@@ -117,7 +117,7 @@ export default function Root() {
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
-                Supply List
+                Expiry List
               </span>
             </NavLink>
 
