@@ -1,17 +1,17 @@
-import { FaCaretRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { getSales } from "../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {FaCaretRight} from "react-icons/fa";
+import {Link} from "react-router-dom";
+import {getSales} from "../features/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
-  const { salesHistory, user } = useSelector((state) => state.user);
+  const {salesHistory, user} = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
@@ -45,11 +45,13 @@ export default function History() {
     const total = sortedSalesHistory.reduce((acc, sale) => acc + sale.total, 0);
 
     const rows = [
-      ["Date", "Product", "Amount", "Sold by"],
+      ["Date", "Product", "Sale", "Costing", "Earnings", "Sold by"],
       ...sortedSalesHistory.map((sale) => [
         new Date(sale.createdAt).toLocaleDateString(),
         sale.product,
-        sale.price,
+        sale.total,
+        sale.cost,
+        sale.total - sale.cost,
         sale.soldBy,
       ]),
       ["Total", "", total.toString(), ""],
@@ -124,7 +126,9 @@ export default function History() {
                 <tr className="flex justify-between items-center text-lg text-center w-full">
                   <th className="w-full">Date</th>
                   <th className="w-full">Product</th>
-                  <th className="w-full">Amount</th>
+                  <th className="w-full">Sales</th>
+                  <th className="w-full">Cost</th>
+                  <th className="w-full">Earnings</th>
                   <th className="w-full">Sold by</th>
                 </tr>
                 {salesHistory &&
@@ -140,6 +144,8 @@ export default function History() {
                       </td>
                       <td className="w-full">{sale.product}</td>
                       <td className="w-full">{sale.total}</td>
+                      <td className="w-full">{sale.cost}</td>
+                      <td className="w-full">{sale.total - sale.cost}</td>
                       <td className="w-full">{sale.soldBy}</td>
                     </tr>
                   ))}

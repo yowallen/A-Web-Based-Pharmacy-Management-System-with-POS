@@ -14,6 +14,7 @@ import {HiTemplate} from "react-icons/hi";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
+  getCostToday,
   productCount,
   topProducts,
   lowProducts,
@@ -29,6 +30,7 @@ export default function Dashboard() {
   const {
     salesToday,
     salesCountToday,
+    getCostToday,
     productsCount,
     user,
     lowProduct,
@@ -109,7 +111,7 @@ export default function Dashboard() {
       {error && <p>{error}</p>} */}
             <p className="flex items-center">
               <TbCurrencyPeso />
-              {salesToday}
+              {salesToday - getCostToday}
             </p>
             <span className="flex justify-end">
               <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
@@ -132,7 +134,7 @@ export default function Dashboard() {
       {error && <p>{error}</p>} */}
             <p className="flex items-center gap-x-2">
               {salesCountToday}{" "}
-              <p className="text-base">products has been sold</p>
+              <p className="text-base">orders been processed</p>
             </p>
             <span className="flex justify-end">
               <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
@@ -284,7 +286,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {showNotificationText && (
+      {isOpen && showNotificationText && (
         <div
           style={{
             position: "fixed",
@@ -317,7 +319,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {showExNotificationText && (
+      {expireisOpen && showExNotificationText && (
         <div
           style={{
             position: "fixed",
@@ -330,7 +332,7 @@ export default function Dashboard() {
             cursor: "pointer",
             zIndex: "999",
           }}
-          onClick={() => navigate("/products")}
+          onClick={() => navigate("/expired")}
         >
           <p
             style={{

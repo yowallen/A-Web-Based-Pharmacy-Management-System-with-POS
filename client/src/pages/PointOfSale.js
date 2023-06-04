@@ -53,7 +53,7 @@ export default function PointOfSale() {
         cost: product.cost,
         quantity: product.quantity,
       },
-      label: `${product.productName}: stock(${product.quantity})`,
+      label: `${product.productName}: onHand(${product.quantity})`,
     }));
 
   const handleAddProduct = (event) => {

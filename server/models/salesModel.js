@@ -19,6 +19,9 @@ const salesSchema = new mongoose.Schema(
     cost: {
       type: Number,
     },
+    totalEarnings: {
+      type: Number,
+    },
     price: {
       type: Number,
     },

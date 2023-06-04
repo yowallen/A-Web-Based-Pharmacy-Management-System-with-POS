@@ -9,13 +9,13 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
 
 const addUser = asyncHandler(async (req, res) => {
-  const { fullName, userName, password, role } = req.body;
+  const {fullName, userName, password, role} = req.body;
 
   if (!userName || !password || !role) {
     res.status(400);
@@ -23,7 +23,7 @@ const addUser = asyncHandler(async (req, res) => {
   }
 
   //check if user already exists
-  const existingUser = await User.findOne({ userName });
+  const existingUser = await User.findOne({userName});
 
   if (existingUser) {
     res.status(400);
@@ -56,8 +56,8 @@ const addUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { fullName, userName, password, role } = req.body;
-  const { id } = req.params;
+  const {fullName, userName, password, role} = req.body;
+  const {id} = req.params;
 
   // Check if user exists
   const user = await User.findById(id);
@@ -68,7 +68,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 
   // Check if username already exists for another user
-  const existingUser = await User.findOne({ userName });
+  const existingUser = await User.findOne({userName});
 
   if (existingUser && existingUser._id.toString() !== id) {
     res.status(409);
@@ -98,14 +98,14 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 const userLogin = asyncHandler(async (req, res) => {
-  const { userName, password } = req.body;
+  const {userName, password} = req.body;
 
   if (!userName || !password) {
     res.status(400);
     throw new Error("Please fill all fields");
   }
 
-  const user = await User.findOne({ userName });
+  const user = await User.findOne({userName});
 
   if (user && (await bcrypt.compare(password, user.password))) {
     res.status(200);
@@ -123,7 +123,7 @@ const userLogin = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, username, role, fullName } = req.user;
+  const {_id, username, role, fullName} = req.user;
 
   res.status(200).json({
     _id,
@@ -165,7 +165,7 @@ const addProduct = asyncHandler(async (req, res) => {
   // Check if product already exists and is not expired
   const productExist = await Product.findOne({
     productName,
-    expiryDate: { $gt: new Date() },
+    expiryDate: {$gt: new Date()},
   });
 
   if (productExist) {
@@ -215,7 +215,7 @@ const addProduct = asyncHandler(async (req, res) => {
 });
 
 const addCategory = asyncHandler(async (req, res) => {
-  const { categoryName, categoryDescription } = req.body;
+  const {categoryName, categoryDescription} = req.body;
   try {
     if (!categoryName || !categoryDescription) {
       res.status(400);
@@ -223,7 +223,7 @@ const addCategory = asyncHandler(async (req, res) => {
     }
 
     //check if category already exists
-    const categoryExist = await Category.findOne({ categoryName });
+    const categoryExist = await Category.findOne({categoryName});
 
     if (categoryExist) {
       res.status(400);
@@ -253,7 +253,7 @@ const addCategory = asyncHandler(async (req, res) => {
 
 //get categories newest first
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find({}).sort({ createdAt: -1 });
+  const categories = await Category.find({}).sort({createdAt: -1});
 
   res.json(categories);
 });
@@ -278,12 +278,12 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const createSales = asyncHandler(async (req, res) => {
   try {
-    const { sales, isDiscounted } = req.body;
+    const {sales, isDiscounted} = req.body;
 
     // Calculate total price for each sale and update product quantity
     const savedSales = await Promise.all(
       sales.map(async (sale) => {
-        const { productId, quantity } = sale;
+        const {productId, quantity} = sale;
 
         // Find the product by ID
         const product = await Product.findById(productId);
@@ -412,7 +412,7 @@ const getSalesCountToday = asyncHandler(async (req, res) => {
 
     res.json(count);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({message: "Server error", error: error.message});
   }
 });
 
@@ -433,7 +433,7 @@ const getProductsCount = asyncHandler(async (req, res) => {
 
 //get all expired products
 const getExpiredProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({ isExpired: true }).sort({
+  const products = await Product.find({isExpired: true}).sort({
     createdAt: -1,
   });
   res.json(products);
@@ -441,7 +441,7 @@ const getExpiredProducts = asyncHandler(async (req, res) => {
 
 //get all sales newest first
 const getSales = asyncHandler(async (req, res) => {
-  const sales = await Sales.find({}).sort({ createdAt: -1 });
+  const sales = await Sales.find({}).sort({createdAt: -1});
   res.json(sales);
 });
 
@@ -454,7 +454,21 @@ const getSalesToday = asyncHandler(async (req, res) => {
     createdAt: {
       $gte: today,
     },
-  }).sort({ createdAt: -1 });
+  }).sort({createdAt: -1});
+
+  res.json(sales);
+});
+
+const getCostToday = asyncHandler(async (req, res) => {
+  //get only today's costing
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const sales = await Sales.find({
+    cost: {
+      $gte: today,
+    },
+  }).sort({createdAt: -1});
 
   res.json(sales);
 });
@@ -528,7 +542,7 @@ const getTotalSalesByMonth = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: {
-          month: { $month: "$createdAt" },
+          month: {$month: "$createdAt"},
         },
         totalSales: {
           $sum: "$total",
@@ -618,7 +632,7 @@ const getTopProductsByMonth = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: {
-          month: { $month: "$createdAt" },
+          month: {$month: "$createdAt"},
           product: "$product",
         },
         totalSales: {
@@ -640,13 +654,13 @@ const getTopProductsByMonth = asyncHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}).sort({ createdAt: -1 });
+  const users = await User.find({}).sort({createdAt: -1});
   res.json(users);
 });
 
 const updateCategory = asyncHandler(async (req, res) => {
   const categoryData = req.body;
-  const { id } = req.params;
+  const {id} = req.params;
 
   try {
     const updatedCategory = await Category.findByIdAndUpdate(
@@ -667,7 +681,7 @@ const updateCategory = asyncHandler(async (req, res) => {
 });
 
 const deleteCategory = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
   try {
     const deletedCategory = await Category.findByIdAndDelete(id);
     res.status(200).json(deletedCategory);
@@ -679,7 +693,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
   const productData = req.body;
-  const { id } = req.params;
+  const {id} = req.params;
 
   const existingProduct = await Product.findById(id);
   const updatedQuantity =
@@ -717,7 +731,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
   try {
     const deletedProduct = await Product.findByIdAndDelete(id);
     res.status(200).json(deletedProduct);
@@ -733,7 +747,7 @@ const getLowQuantityProducts = asyncHandler(async (req, res) => {
     $expr: {
       $lte: ["$quantity", "$productLimit"],
     },
-  }).sort({ createdAt: -1 });
+  }).sort({createdAt: -1});
 
   res.json(products);
 });
@@ -757,7 +771,7 @@ const getAlmostExpired = asyncHandler(async (req, res) => {
         },
       },
     ],
-  }).sort({ createdAt: -1 });
+  }).sort({createdAt: -1});
 
   res.json(products);
 });
@@ -775,6 +789,7 @@ module.exports = {
   getExpiredProducts,
   getTodaySalesTotal,
   getSalesCountToday,
+  getCostToday,
   getSales,
   getProductsCount,
   getCategories,
