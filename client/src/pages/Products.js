@@ -39,8 +39,6 @@ export default function Products() {
     cost,
   } = productData;
 
-  console.log(typeof productLimit);
-
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getCategories());
