@@ -24,6 +24,7 @@ router.get("/getproduct", userController.getProducts);
 router.get("/topproducts", userController.getTopProductsByMonth);
 router.get("/getalmostexpired", userController.getAlmostExpired);
 router.get("/lowquantity", userController.getLowQuantityProducts);
+router.get("/costtoday", userController.getCostToday);
 router.post("/addproduct", userController.addProduct);
 router.post("/createsales", protect, userController.createSales);
 router.post("/addcategory", userController.addCategory);

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaShoppingBag,
   FaChartBar,
@@ -7,10 +7,10 @@ import {
   FaArrowCircleRight,
   FaHistory,
 } from "react-icons/fa";
-import {TbCurrencyPeso} from "react-icons/tb";
-import {RiAlarmWarningLine} from "react-icons/ri";
-import {IoWarningOutline} from "react-icons/io5";
-import {HiTemplate} from "react-icons/hi";
+import { TbCurrencyPeso } from "react-icons/tb";
+import { RiAlarmWarningLine } from "react-icons/ri";
+import { IoWarningOutline } from "react-icons/io5";
+import { HiTemplate } from "react-icons/hi";
 import {
   getTodaySalesTotal,
   getSalesCountToday,
@@ -21,8 +21,8 @@ import {
   getAlmostExpired,
   getProducts,
 } from "../features/userSlice";
-import {useSelector, useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function Dashboard() {
   const {
     salesToday,
     salesCountToday,
-    getCostToday,
+    costsToday,
     productsCount,
     user,
     lowProduct,
@@ -67,6 +67,7 @@ export default function Dashboard() {
     dispatch(lowProducts());
     dispatch(getAlmostExpired());
     dispatch(getProducts());
+    dispatch(getCostToday());
   }, [dispatch, navigate, user]);
 
   useEffect(() => {
@@ -111,10 +112,10 @@ export default function Dashboard() {
       {error && <p>{error}</p>} */}
             <p className="flex items-center">
               <TbCurrencyPeso />
-              {salesToday - getCostToday}
+              {salesToday - costsToday}
             </p>
             <span className="flex justify-end">
-              <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
+              <FaChartBar style={{ fontSize: "6rem", color: "#b45309" }} />
             </span>
           </div>
           <div className="bg-amber-700 font-normal text-base">
@@ -137,7 +138,7 @@ export default function Dashboard() {
               <p className="text-base">orders been processed</p>
             </p>
             <span className="flex justify-end">
-              <FaBoxes style={{fontSize: "6rem", color: "#065f46"}} />
+              <FaBoxes style={{ fontSize: "6rem", color: "#065f46" }} />
             </span>
           </div>
           <div className="bg-emerald-800 font-normal text-base">
@@ -226,7 +227,7 @@ export default function Dashboard() {
               </>
             )}
             <span className="flex justify-end">
-              <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
+              <FaShoppingBag style={{ fontSize: "6rem", color: "#0369a1" }} />
             </span>
           </div>
           <div className="bg-sky-700 font-normal text-base">
@@ -243,7 +244,7 @@ export default function Dashboard() {
           <div className={`${card} bg-red-500`}>
             <span>Order History</span>
             <span className="flex justify-end">
-              <FaHistory style={{fontSize: "8.1rem", color: "#991b1b"}} />
+              <FaHistory style={{ fontSize: "8.1rem", color: "#991b1b" }} />
             </span>
           </div>
           <div className="bg-red-800 font-normal text-base">
@@ -271,7 +272,7 @@ export default function Dashboard() {
             <span className="flex justify-end">
               <HiTemplate
                 className="text-purple-600"
-                style={{fontSize: "6rem"}}
+                style={{ fontSize: "6rem" }}
               />
             </span>
           </div>
@@ -312,7 +313,7 @@ export default function Dashboard() {
           </p>
           <p
             className="hover:underline hover:text-red-500 text-red-700"
-            style={{fontSize: "12px"}}
+            style={{ fontSize: "12px" }}
           >
             Click here to view more details.
           </p>
@@ -345,7 +346,7 @@ export default function Dashboard() {
           </p>
           <p
             className="hover:underline hover:text-red-500 text-red-700"
-            style={{fontSize: "12px"}}
+            style={{ fontSize: "12px" }}
           >
             Click here to view more details.
           </p>

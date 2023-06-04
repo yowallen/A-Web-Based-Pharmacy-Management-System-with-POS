@@ -24,7 +24,7 @@ const getSales = () => API_URL.get("/getsales");
 const getTodaySalesTotal = () => API_URL.get("/salestoday");
 const getSalesCountToday = () => API_URL.get("/salescount");
 const getSalesListToday = () => API_URL.get("/saleslisttoday");
-const getCostToday = () => API_URL("/costtoday");
+const getCostToday = () => API_URL.get("/costtoday");
 const getCategories = () => API_URL.get("/getcategory");
 const productCount = () => API_URL.get("/productcount");
 const getProduct = () => API_URL.get("/getproduct");

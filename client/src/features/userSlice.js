@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from "./userService";
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -24,7 +24,7 @@ const initialState = {
 
 export const userLogin = createAsyncThunk(
   "user/login",
-  async ({userData, navigate, toast}, {rejectWithValue}) => {
+  async ({ userData, navigate, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.userLogin(userData);
       navigate("/");
@@ -39,7 +39,7 @@ export const userLogin = createAsyncThunk(
 
 export const addUser = createAsyncThunk(
   "user/adduser",
-  async ({userData, toast}, {rejectWithValue}) => {
+  async ({ userData, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.addUser(userData);
       toast.success("User Added");
@@ -53,7 +53,7 @@ export const addUser = createAsyncThunk(
 
 export const editUser = createAsyncThunk(
   "user/edituser",
-  async ({id, userData, toast}, {rejectWithValue}) => {
+  async ({ id, userData, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.editUser(id, userData);
       toast.success("User Updated");
@@ -97,7 +97,7 @@ export const getSalesCountToday = createAsyncThunk(
 
 export const addProduct = createAsyncThunk(
   "user/addproduct",
-  async ({productData, toast}, {rejectWithValue}) => {
+  async ({ productData, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.addProduct(productData);
       toast.success("Product Added");
@@ -116,7 +116,7 @@ export const productCount = createAsyncThunk("user/productcount", async () => {
 
 export const addCategory = createAsyncThunk(
   "user/addcategory",
-  async ({categoryData, toast}, {rejectWithValue}) => {
+  async ({ categoryData, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.addCategory(categoryData);
       toast.success("Category Added");
@@ -140,9 +140,9 @@ export const getProducts = createAsyncThunk("user/getproduct", async () => {
 
 export const createSales = createAsyncThunk(
   "user/createsales",
-  async ({sales, isDiscounted, toast}, {rejectWithValue}) => {
+  async ({ sales, isDiscounted, toast }, { rejectWithValue }) => {
     try {
-      const response = await userService.createSales({sales, isDiscounted});
+      const response = await userService.createSales({ sales, isDiscounted });
       toast.success("Pay Successful");
       return response.data;
     } catch (error) {
@@ -160,7 +160,7 @@ export const getSalesToday = createAsyncThunk(
   }
 );
 
-export const getCostingToday = createAsyncThunk("user/costtoday", async () => {
+export const getCostToday = createAsyncThunk("user/costtoday", async () => {
   const response = await userService.getCostToday();
   return response.data;
 });
@@ -180,7 +180,7 @@ export const getMonthSales = createAsyncThunk("user/monthsales", async () => {
 
 export const updatecategory = createAsyncThunk(
   "user/updatecategory",
-  async ({id, updatedCategory, toast}, {rejectWithValue}) => {
+  async ({ id, updatedCategory, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.updatedCategory(id, updatedCategory);
       toast.success("Category Updated");
@@ -194,7 +194,7 @@ export const updatecategory = createAsyncThunk(
 
 export const deleteCategory = createAsyncThunk(
   "user/deletecategory",
-  async ({id, toast}, {rejectWithValue}) => {
+  async ({ id, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.deleteCategory(id);
       toast.success("Category Deleted");
@@ -208,7 +208,7 @@ export const deleteCategory = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "user/updateproduct",
-  async ({id, productData, toast}, {rejectWithValue}) => {
+  async ({ id, productData, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.updateProduct(id, productData);
       toast.success("Product Updated");
@@ -222,7 +222,7 @@ export const updateProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "user/deleteproduct",
-  async ({id, toast}, {rejectWithValue}) => {
+  async ({ id, toast }, { rejectWithValue }) => {
     try {
       const response = await userService.deleteProduct(id);
       toast.success("Product Deleted");
@@ -295,7 +295,7 @@ const userSlice = createSlice({
     [getSalesToday.fulfilled]: (state, action) => {
       state.salesHistoryToday = action.payload;
     },
-    [getCostingToday.fulfilled]: (state, action) => {
+    [getCostToday.fulfilled]: (state, action) => {
       state.costToday = action.payload;
     },
     [getExpiredProducts.fulfilled]: (state, action) => {

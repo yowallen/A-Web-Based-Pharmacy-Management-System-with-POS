@@ -1,17 +1,17 @@
-import {FaCaretRight} from "react-icons/fa";
-import {Link} from "react-router-dom";
-import {getSales} from "../features/userSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {TbCurrencyPeso} from "react-icons/tb";
+import { FaCaretRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { getSales } from "../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TbCurrencyPeso } from "react-icons/tb";
 
 export default function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
-  const {salesHistory, user} = useSelector((state) => state.user);
+  const { salesHistory, user } = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
@@ -101,12 +101,12 @@ export default function History() {
             </div>
 
             {sortedSalesHistory.length > 0 && (
-              <div className=" flex items-center border-2 border-prime rounded px-3 py-1 text-lg text-gray-700">
-                Total Amount:{" "}
+              <div className="flex items-center border-2 border-prime rounded px-3 py-1 text-lg text-gray-700">
+                Total Earnings:{" "}
                 <p className="flex items-center">
                   <TbCurrencyPeso />
                   {sortedSalesHistory.reduce(
-                    (total, sale) => total + sale.total,
+                    (total, sale) => total + (sale.total - sale.cost), // Sum earnings
                     0
                   )}
                 </p>

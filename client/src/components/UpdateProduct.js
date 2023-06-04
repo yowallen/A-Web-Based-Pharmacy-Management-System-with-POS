@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {updateProduct} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateProduct } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 
-const UpdateProduct = ({product, categories, user}) => {
+const UpdateProduct = ({ product, categories, user }) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -53,6 +53,17 @@ const UpdateProduct = ({product, categories, user}) => {
   const input =
     "w-full text-sm font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded";
   const label = "flex text-base font-mont font-medium pt-2";
+
+  const handleClearDate = () => {
+    setProductData({
+      ...productData,
+      expiryDate: "", // Clear the expiry date value
+    });
+  };
+
+  const formattedExpiryDate = expiryDate
+    ? new Date(expiryDate).toISOString().slice(0, 10)
+    : "";
 
   return (
     <div>
@@ -153,14 +164,17 @@ const UpdateProduct = ({product, categories, user}) => {
           >
             expiryDate:
           </label>
+
           <input
             type="date"
             id="expiryDate"
-            value={new Date(expiryDate).toISOString().slice(0, 10)}
+            value={formattedExpiryDate}
             onChange={handleChange}
             name="expiryDate"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
+            min={new Date().toISOString().split("T")[0]}
           />
+
           <div className="flex-col">
             <label className={label}>Product Category:</label>
             <select
@@ -230,7 +244,9 @@ const UpdateProduct = ({product, categories, user}) => {
             onChange={handleChange}
             name="expiryDate"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            min={new Date().toISOString().slice(0, 10)}
           />
+
           <button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300 ease-in-out"
