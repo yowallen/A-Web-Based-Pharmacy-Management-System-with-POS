@@ -446,7 +446,6 @@ const getSales = asyncHandler(async (req, res) => {
 });
 
 const getSalesToday = asyncHandler(async (req, res) => {
-  //get only today's sales
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
