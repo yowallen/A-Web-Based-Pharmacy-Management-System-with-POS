@@ -16,6 +16,7 @@ const UpdateProduct = ({ product, categories, user }) => {
     description: product.description,
     prescriptionRequired: product.prescriptionRequired,
     productLimit: product.productLimit,
+    cost: product.cost,
   });
 
   const {
@@ -29,6 +30,7 @@ const UpdateProduct = ({ product, categories, user }) => {
     description,
     prescriptionRequired,
     productLimit,
+    cost,
   } = productData;
 
   const handleChange = (e) => {
@@ -144,6 +146,19 @@ const UpdateProduct = ({ product, categories, user }) => {
             name="productLimit"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
+
+          <label htmlFor="cost" className="font-semibold text-gray-700 text-md">
+            cost:
+          </label>
+          <input
+            type="number"
+            id="cost"
+            value={cost}
+            onChange={handleChange}
+            name="cost"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
+          />
+
           <label
             htmlFor="price"
             className="font-semibold text-gray-700 text-md"

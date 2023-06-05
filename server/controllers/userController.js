@@ -731,6 +731,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         description: productData.description,
         expiryDate: productData.expiryDate,
         productLimit: productData.productLimit,
+        cost: productData.cost,
         prescriptionRequired: productData.prescriptionRequired,
         stockedIn:
           productData.quantity > 0

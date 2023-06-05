@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {toast} from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
-import {addProduct, getCategories, getProducts} from "../features/userSlice";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { addProduct, getCategories, getProducts } from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -45,7 +45,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const {user, categories, products} = useSelector((state) => state.user);
+  const { user, categories, products } = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -63,7 +63,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({productData, toast}));
+    dispatch(addProduct({ productData, toast }));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -208,6 +208,7 @@ export default function Products() {
                         name="quantity"
                         value={quantity}
                         onChange={(e) => onChange(e)}
+                        min={0}
                       />
                     </div>
 
@@ -220,6 +221,7 @@ export default function Products() {
                         name="productLimit"
                         value={productLimit}
                         onChange={(e) => onChange(e)}
+                        min={0}
                       />
                     </div>
 
@@ -313,7 +315,7 @@ export default function Products() {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-xl font-semibold">Adding New Product</h3>
+                  <h3 className="text-xl font-semibold">Update Product</h3>
                 </div>
                 {/*body*/}
                 <div className="relative p-3 flex-auto">

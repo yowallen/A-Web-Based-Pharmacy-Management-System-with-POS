@@ -12,6 +12,9 @@ const UpdateCategoryForm = ({ category }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (categoryName === "" || categoryDescription === "") {
+      return toast.error("Please fill in all fields");
+    }
     const updatedCategory = {
       categoryName,
       categoryDescription,
