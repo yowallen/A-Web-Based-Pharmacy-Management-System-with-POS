@@ -245,8 +245,8 @@ export default function Dashboard() {
             <span>New Products</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
       {error && <p>{error}</p>} */}
-            <p className="flex items-center gap-x-2">
-              <p>Recent:</p>
+            <p className="flex items-center text-sm gap-x-2">
+              <p className="text-2xl">Recent:</p>
               {products.length &&
                 `${products[0].productName} (${products[0].quantity})`}
             </p>
