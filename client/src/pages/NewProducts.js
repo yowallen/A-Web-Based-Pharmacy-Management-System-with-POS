@@ -1,17 +1,17 @@
-import { FaCaretRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { getProducts } from "../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {FaCaretRight} from "react-icons/fa";
+import {Link} from "react-router-dom";
+import {getProducts} from "../features/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function NewProducts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sortedSalesHistory, setSortedSalesHistory] = useState([]);
 
-  const { products, user } = useSelector((state) => state.user);
+  const {products, user} = useSelector((state) => state.user);
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
@@ -81,10 +81,10 @@ export default function NewProducts() {
         <span>
           <FaCaretRight />
         </span>
-        History
+        New Deliveries
       </h1>
       <div>
-        <h2 className="text-lg mt-6">New Products - Report Data</h2>
+        <h2 className="text-lg mt-6">New Deliveries - Report Data</h2>
         <div className="flex-col">
           <div className="flex items-center justify-between pb-4">
             <div>

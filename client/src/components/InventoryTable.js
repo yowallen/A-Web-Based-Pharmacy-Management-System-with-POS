@@ -65,17 +65,7 @@ const InventoryTable = ({data, search, setSearch}) => {
       sortable: true,
     },
     {
-      name: "Limit",
-      selector: (row) => row.productLimit,
-      sortable: true,
-    },
-    {
-      name: "Stock In",
-      selector: (row) => row.stockedIn,
-      sortable: true,
-    },
-    {
-      name: "Stock Available",
+      name: "Stock On Hand",
       selector: (row) => row.quantity,
       sortable: true,
     },

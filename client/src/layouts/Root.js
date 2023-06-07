@@ -90,7 +90,7 @@ export default function Root() {
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
-                Products
+                Manage Products
               </span>
             </NavLink>
 

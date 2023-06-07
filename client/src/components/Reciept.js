@@ -43,16 +43,16 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                 </div>
 
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  <h3 className="text-lg leading-6 font-light text-gray-900">
                     Invoice
                   </h3>
-                  <p className="text-base ">
+                  <p className="text-base font-light">
                     CORISOTO's Pharmacy and Dentistry
                   </p>
-                  <p className="text-base">
+                  <p className="text-base font-light">
                     145 J. P. Rizal St, Balite, Rodriguez, 1860 Rizal
                   </p>
-                  <p className="text-sm text text-gray-500 mb-4">
+                  <p className="text-sm text text-gray-500 mb-4 font-light">
                     Receipt:{" "}
                     {sale.sales &&
                       sale.sales.length > 0 &&
@@ -64,16 +64,16 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                     <table className="w-full mt-4">
                       <thead>
                         <tr className="text-base">
-                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                          <th className="tracking-wide font-light pr-2">
                             PRODUCT:
                           </th>
-                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                          <th className="tracking-wide font-light pr-2">
                             PRICE:
                           </th>
-                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                          <th className="tracking-wide font-light pr-2">
                             QTY:
                           </th>
-                          <th className="tracking-wide text-gray-500 font-bold pr-2">
+                          <th className="tracking-wide font-light pr-2">
                             TOTAL:
                           </th>
                         </tr>
@@ -83,7 +83,7 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                           sale.sales.map((sale) => (
                             <tr
                               key={sale.receipt}
-                              className="text-sm font-medium"
+                              className="text-sm font-light text-gray-500"
                             >
                               <td className="border-b border-gray-200 p-1">
                                 {sale.product}
@@ -104,7 +104,7 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                           ))}
                       </tbody>
                     </table>
-                    <p className="text-sm text-right text-gray-500 mt-4">
+                    <p className="text-sm text-right text-gray-500 mt-4 font-light">
                       Overall Total:{" "}
                       {sale.sales &&
                         sale.sales.reduce((total, item) => {

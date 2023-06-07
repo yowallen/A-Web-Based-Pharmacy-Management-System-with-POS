@@ -20,11 +20,13 @@ export default function ProductsTable({
         fontSize: "0.875rem",
         backgroundColor: "#424874",
         color: "#fff",
+        padding: "20px",
       },
     },
     cells: {
       style: {
         fontWeight: 600,
+        padding: "20px",
       },
     },
   };
@@ -47,18 +49,13 @@ export default function ProductsTable({
 
   const columns = [
     {
-      name: "Product",
+      name: "Name",
       selector: (row) =>
         row.prescriptionRequired ? (
           <div>
             <div className="flex items-center gap-x-1">
               <div className="p-1 bg-emerald-600"></div>
               <div>{row.productName}</div>
-            </div>
-            <div className="font-light">
-              <p>Measurement: {row.measurement}</p>
-              <p>Description: {row.productType}</p>
-              <p>Limit: {row.productLimit}</p>
             </div>
           </div>
         ) : (
@@ -67,13 +64,18 @@ export default function ProductsTable({
               <div className="p-1 bg-amber-400"></div>
               <div>{row.productName}</div>
             </div>
-            <div className="font-light">
-              <p>Measurement: {row.measurement}</p>
-              <p>Description: {row.productType}</p>
-              <p>Limit: {row.productLimit}</p>
-            </div>
           </div>
         ),
+    },
+    {
+      name: "Code",
+      selector: (row) => row._id,
+      sortable: true,
+    },
+    {
+      name: "Unit",
+      selector: (row) => row.measurement,
+      sortable: true,
     },
     {
       name: "Stocks",
@@ -83,6 +85,11 @@ export default function ProductsTable({
     {
       name: "Category",
       selector: (row) => row.category,
+      sortable: true,
+    },
+    {
+      name: "Type",
+      selector: (row) => row.productType,
       sortable: true,
     },
     {

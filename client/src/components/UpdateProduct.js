@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateProduct } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {updateProduct} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 
-const UpdateProduct = ({ product, categories, user }) => {
+const UpdateProduct = ({product, categories, user}) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -93,21 +93,37 @@ const UpdateProduct = ({ product, categories, user }) => {
             htmlFor="productType"
             className="font-semibold text-gray-700 text-md"
           >
-            productType:
+            Product Type:
           </label>
-          <input
+          {/* <input
             type="text"
             id="productType"
             value={productType}
             onChange={handleChange}
             name="productType"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
-          />
+          /> */}
+          <select
+            name="productType"
+            id="productType"
+            value={productType}
+            className={input}
+            onChange={handleChange}
+          >
+            <option value="">--Select Product Type--</option>
+            <option value="Capsule">Capsule</option>
+            <option value="Drops">Drops</option>
+            <option value="Injection">Injection</option>
+            <option value="Nebule">Nebule</option>
+            <option value="Suspension">Suspension</option>
+            <option value="Syrup">Syrup</option>
+            <option value="Tablet">Tablet</option>
+          </select>
           <label
             htmlFor="measurement"
             className="font-semibold text-gray-700 text-md"
           >
-            measurement:
+            Unit:
           </label>
           <input
             type="text"
@@ -136,7 +152,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             htmlFor="quantity"
             className="font-semibold text-gray-700 text-md"
           >
-            Product Limit:
+            Minimum Stock Level
           </label>
           <input
             type="number"

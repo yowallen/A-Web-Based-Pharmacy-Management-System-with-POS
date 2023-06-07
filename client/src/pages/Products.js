@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { addProduct, getCategories, getProducts } from "../features/userSlice";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
 
@@ -45,7 +45,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories]);
 
-  const { user, categories, products } = useSelector((state) => state.user);
+  const {user, categories, products} = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -63,7 +63,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({ productData, toast }));
+    dispatch(addProduct({productData, toast}));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -112,9 +112,9 @@ export default function Products() {
     setProductToEdit(data);
   };
   return (
-    <div className="w-full h-full">
+    <div className="max-w-full h-full">
       <div className="flex items-center justify-between">
-        <h1 className="font-mont">Product List</h1>
+        <h1 className="font-mont font-bold">Product List</h1>
         <button
           className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
           type="button"
@@ -170,18 +170,34 @@ export default function Products() {
 
                     <div className="flex-col">
                       <label className={label}>Product Type:</label>
-                      <input
+                      {/* <input
                         type="text"
                         className={input}
                         placeholder="Enter type of product"
                         name="productType"
                         value={productType}
                         onChange={(e) => onChange(e)}
-                      />
+                      /> */}
+                      <select
+                        name="productType"
+                        id=""
+                        value={productType}
+                        className={input}
+                        onChange={(e) => onChange(e)}
+                      >
+                        <option value="">--Select Product Type--</option>
+                        <option value="Capsule">Capsule</option>
+                        <option value="Drops">Drops</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Nebule">Nebule</option>
+                        <option value="Suspension">Suspension</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Tablet">Tablet</option>
+                      </select>
                     </div>
 
                     <div className="flex-col">
-                      <label className={label}>Measurement:</label>
+                      <label className={label}>Unit:</label>
                       <input
                         type="text"
                         className={input}
@@ -213,7 +229,7 @@ export default function Products() {
                     </div>
 
                     <div className="flex-col">
-                      <label className={label}>Product Limit:</label>
+                      <label className={label}>Minimum Stock Level:</label>
                       <input
                         type="number"
                         className={input}
