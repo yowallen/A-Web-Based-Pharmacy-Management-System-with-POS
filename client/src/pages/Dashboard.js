@@ -107,12 +107,12 @@ export default function Dashboard() {
       <div className="flex justify-between pt-3 my-4 text-ter">
         <div className="flex-col w-5/12">
           <div className={`${card} bg-amber-500`}>
-            <span>Total Earnings Today</span>
+            <span>Total Sales Today</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.totalSales}</p>)}
       {error && <p>{error}</p>} */}
             <p className="flex items-center">
               <TbCurrencyPeso />
-              {salesToday - costsToday}
+              {salesToday}
             </p>
             <span className="flex justify-end">
               <FaChartBar style={{fontSize: "6rem", color: "#b45309"}} />
@@ -242,7 +242,7 @@ export default function Dashboard() {
 
         <div className="flex-col w-5/12">
           <div className={`${card} bg-purple-400`}>
-            <span>New Products</span>
+            <span>New Deliveries</span>
             {/* {data && data.map((data) => <p key={data.id}>{data.numOfSales}</p>)}
       {error && <p>{error}</p>} */}
             <p className="flex items-center text-sm gap-x-2">
