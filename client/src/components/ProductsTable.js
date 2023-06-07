@@ -49,6 +49,11 @@ export default function ProductsTable({
 
   const columns = [
     {
+      name: "Code",
+      selector: (row) => row._id,
+      sortable: true,
+    },
+    {
       name: "Name",
       selector: (row) =>
         row.prescriptionRequired ? (
@@ -67,11 +72,7 @@ export default function ProductsTable({
           </div>
         ),
     },
-    {
-      name: "Code",
-      selector: (row) => row._id,
-      sortable: true,
-    },
+
     {
       name: "Unit",
       selector: (row) => row.measurement,
@@ -88,7 +89,7 @@ export default function ProductsTable({
       sortable: true,
     },
     {
-      name: "Type",
+      name: "Description",
       selector: (row) => row.productType,
       sortable: true,
     },

@@ -50,12 +50,10 @@ const BatchTable = ({data, search, setSearch}) => {
     },
     {
       name: "Latest Expiry Date",
-      selector: (row) => new Date(row.expiryDate).toLocaleDateString(),
-      sortable: true,
-    },
-    {
-      name: "Stock In",
-      selector: (row) => row.stockedIn,
+      selector: (row) =>
+        new Date(row.expiryDate).toLocaleDateString("en-US", {
+          dateStyle: "long",
+        }),
       sortable: true,
     },
   ];
