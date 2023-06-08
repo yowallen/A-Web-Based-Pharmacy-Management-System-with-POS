@@ -15,6 +15,8 @@ import {Outlet, NavLink} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {userLogout} from "../features/userSlice";
 import {useDispatch, useSelector} from "react-redux";
+import {RiAlarmWarningLine} from "react-icons/ri";
+import {IoWarningOutline} from "react-icons/io5";
 
 export default function Root() {
   const [openNav, setOpenNav] = useState(true);
@@ -24,8 +26,10 @@ export default function Root() {
   const iconStyle = {fontSize: "24px"};
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [disableLowBtn, setDisableLowBtn] = useState(false);
+  const [disableExBtn, setDisableExBtn] = useState(false);
 
-  const {user} = useSelector((state) => state.user);
+  const {user, lowProduct, almostExpired} = useSelector((state) => state.user);
 
   const handleOut = () => {
     dispatch(userLogout());
@@ -146,9 +150,56 @@ export default function Root() {
         </div>
       </div>
       <div className="p-8 font-bold text-2xl flex-1 h-full">
-        <h1 className="font-lob text-prime text-center text-3xl mb-4">
-          Corisoto's Pharma
-        </h1>
+        <div className="flex items-center w-full mb-4">
+          <h1 className="font-lob text-prime text-3xl">Corisoto's Pharmacy</h1>
+          <div className=" ml-72 flex gap-x-2">
+            {lowProduct.length === 0 ? (
+              <button
+                disabled
+                onClick={() => navigate("/low")}
+                className="bg-gray-600 p-2 rounded-md text-sm text-ter flex items-center gap-x-2"
+              >
+                <IoWarningOutline /> Low on Stocks:
+                <span className="ml-2 text-base bg-gray-300 rounded-full w-6 h-6 items-center justify-center inline-flex">
+                  {lowProduct.length}
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/low")}
+                className="bg-prime p-2 rounded-md text-sm text-ter hover:bg-sec flex items-center gap-x-2"
+              >
+                <IoWarningOutline /> Low on Stocks:
+                <span className="ml-2 text-base bg-red-500 rounded-full w-6 h-6 items-center justify-center inline-flex">
+                  {lowProduct.length}
+                </span>
+              </button>
+            )}
+
+            {almostExpired.length === 0 ? (
+              <button
+                disabled
+                onClick={() => navigate("/expired")}
+                className="bg-gray-600 p-2 rounded-md text-sm text-ter flex items-center gap-x-2"
+              >
+                <RiAlarmWarningLine /> Nearly Expired:
+                <span className="ml-2 text-base bg-gray-300 rounded-full w-6 h-6 items-center justify-center inline-flex">
+                  {almostExpired.length}
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/expired")}
+                className="bg-prime p-2 rounded-md text-sm text-ter hover:bg-sec flex items-center gap-x-2"
+              >
+                <RiAlarmWarningLine /> Nearly Expired:
+                <span className="ml-2 text-base bg-red-500 rounded-full w-6 h-6 items-center justify-center inline-flex">
+                  {almostExpired.length}
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
         <Outlet />
       </div>
     </div>

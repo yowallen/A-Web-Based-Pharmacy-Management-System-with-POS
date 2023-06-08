@@ -26,7 +26,6 @@ export default function ProductsTable({
     cells: {
       style: {
         fontWeight: 600,
-        padding: "20px",
       },
     },
   };

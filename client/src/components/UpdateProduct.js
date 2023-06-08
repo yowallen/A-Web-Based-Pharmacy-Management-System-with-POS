@@ -50,6 +50,7 @@ const UpdateProduct = ({product, categories, user}) => {
         toast,
       })
     );
+    window.location.reload(true);
   };
 
   const input =

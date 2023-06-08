@@ -120,7 +120,7 @@ const LowProductsTable = ({data, search, setSearch}) => {
 
   return (
     <div>
-      <h1 className="pb-5">List of Stocks of Available Products</h1>
+      <h1 className="pb-5">List of Low on Stock Products</h1>
       <div ref={tableRef}>
         <DataTable
           columns={columns}

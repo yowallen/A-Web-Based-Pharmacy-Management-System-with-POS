@@ -59,7 +59,7 @@ const BatchTable = ({data, search, setSearch}) => {
   ];
   return (
     <div>
-      <h1 className="pb-5">Supply List</h1>
+      <h1 className="pb-5">Expiry List</h1>
       <DataTable
         columns={columns}
         data={data}

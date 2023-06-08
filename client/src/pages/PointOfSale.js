@@ -1,12 +1,12 @@
-import { useEffect, useState, Fragment } from "react";
+import {useEffect, useState, Fragment} from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts, createSales } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getProducts, createSales} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 import Reciept from "../components/Reciept";
-import { Dialog, Transition } from "@headlessui/react";
-import { TbCurrencyPeso } from "react-icons/tb";
+import {Dialog, Transition} from "@headlessui/react";
+import {TbCurrencyPeso} from "react-icons/tb";
 
 export default function PointOfSale() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function PointOfSale() {
     setIsOpen(null);
   }
 
-  const { products, user, receipt } = useSelector((state) => state.user);
+  const {products, user, receipt} = useSelector((state) => state.user);
 
   const options = products
     .filter((product) => new Date(product.expiryDate) > new Date()) // Exclude expired products
@@ -61,8 +61,8 @@ export default function PointOfSale() {
 
     if (!selectedProducts) return toast.error("Please select a product");
 
-    const { value } = selectedProducts;
-    const { value: quantityValue } = event.target.quantity;
+    const {value} = selectedProducts;
+    const {value: quantityValue} = event.target.quantity;
 
     if (value.quantity < quantityValue) {
       return toast.error(
@@ -128,7 +128,7 @@ export default function PointOfSale() {
         // Add a new product to payProducts
         setPayProducts([
           ...payProducts,
-          { productId: value.id, quantity: parseInt(quantityValue) },
+          {productId: value.id, quantity: parseInt(quantityValue)},
         ]);
       }
 
@@ -156,12 +156,12 @@ export default function PointOfSale() {
         : "Insufficient amount";
       return toast.error(errorMessage);
     } else if (payProducts.length > 0) {
-      dispatch(createSales({ sales: payProducts, isDiscounted, toast }));
-      setShowReceiptModal(true);
+      dispatch(createSales({sales: payProducts, isDiscounted, toast}));
       setDisplayProducts([]);
       setPayProducts([]);
       dispatch(getProducts());
       closeCustomer();
+      setShowReceiptModal(true);
     } else {
       return toast.error("Please select a product");
     }
