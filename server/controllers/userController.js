@@ -146,6 +146,7 @@ const addProduct = asyncHandler(async (req, res) => {
     prescriptionRequired,
     productLimit,
     cost,
+    brand,
   } = req.body;
 
   if (
@@ -155,7 +156,8 @@ const addProduct = asyncHandler(async (req, res) => {
     !measurement ||
     !quantity ||
     !price ||
-    !expiryDate
+    !expiryDate ||
+    !brand
   ) {
     res.status(400);
     throw new Error("Please fill all fields");
@@ -181,6 +183,7 @@ const addProduct = asyncHandler(async (req, res) => {
     measurement,
     quantity,
     price,
+    brand,
     description,
     expiryDate,
     prescriptionRequired,
@@ -199,6 +202,7 @@ const addProduct = asyncHandler(async (req, res) => {
       measurement: product.measurement,
       quantity: product.quantity,
       price: product.price,
+      brand: product.brand,
       description: product.description,
       expiryDate: product.expiryDate,
       prescriptionRequired: product.prescriptionRequired,
@@ -723,6 +727,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       id,
       {
         productName: productData.productName,
+        brand: productData.brand,
         category: productData.category,
         productType: productData.productType,
         measurement: productData.measurement,
@@ -795,6 +800,39 @@ const getAlmostExpired = asyncHandler(async (req, res) => {
 
   res.json(products);
 });
+
+// const getTypes = async (req, res) => {
+//   try {
+//     const types = await Product.distinct("productType");
+//     res.json(types);
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Failed to fetch types", error: error.message });
+//   }
+// };
+
+// const getMeasurement = async (req, res) => {
+//   try {
+//     const types = await Product.distinct("measurement");
+//     res.json(types);
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Failed to fetch types", error: error.message });
+//   }
+// };
+
+// const getBrandNames = async (req, res) => {
+//   try {
+//     const types = await Product.distinct("brand");
+//     res.json(types);
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Failed to fetch types", error: error.message });
+//   }
+// };
 
 module.exports = {
   addUser,

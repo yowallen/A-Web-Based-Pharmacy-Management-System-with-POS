@@ -37,6 +37,10 @@ const productSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    brand: {
+      type: String,
+      required: true,
+    },
     prescriptionRequired: {
       type: Boolean,
       required: true,
