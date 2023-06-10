@@ -156,7 +156,7 @@ export default function Products() {
           + Add Product
         </button>
       </div>
-      <div className="flex gap-5">
+      <div className="flex gap-5 font-normal text-xl">
         {/* Dropdown filters */}
         <select
           value={selectedCategory}
