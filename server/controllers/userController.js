@@ -147,6 +147,7 @@ const addProduct = asyncHandler(async (req, res) => {
     productLimit,
     cost,
     brand,
+    supplier,
   } = req.body;
 
   if (
@@ -157,7 +158,8 @@ const addProduct = asyncHandler(async (req, res) => {
     !quantity ||
     !price ||
     !expiryDate ||
-    !brand
+    !brand ||
+    !supplier
   ) {
     res.status(400);
     throw new Error("Please fill all fields");
@@ -192,6 +194,7 @@ const addProduct = asyncHandler(async (req, res) => {
     isExpired: false,
     productLimit,
     cost,
+    supplier,
   });
   if (product) {
     res.status(201).json({
@@ -211,6 +214,7 @@ const addProduct = asyncHandler(async (req, res) => {
       stockedAvailable: product.stockedAvailable,
       productLimit: product.productLimit,
       cost: product.cost,
+      supplier: product.supplier,
     });
   } else {
     res.status(400);
@@ -728,6 +732,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       {
         productName: productData.productName,
         brand: productData.brand,
+        supplier: productData.supplier,
         category: productData.category,
         productType: productData.productType,
         measurement: productData.measurement,
