@@ -79,6 +79,12 @@ export default function ProductsTable({
     },
 
     {
+      name: "Supplier",
+      selector: (row) => row.supplier,
+      sortable: true,
+    },
+
+    {
       name: "Unit",
       selector: (row) => row.measurement,
       sortable: true,
