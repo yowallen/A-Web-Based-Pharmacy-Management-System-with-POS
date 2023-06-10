@@ -33,6 +33,9 @@ const getMonthSales = () => API_URL.get("/monthsales");
 const topProducts = () => API_URL.get("/topproducts");
 const lowProducts = () => API_URL.get("/lowquantity");
 const almostExpired = () => API_URL.get("/getalmostexpired");
+const getType = () => API_URL.get("/gettype");
+const getMes = () => API_URL.get("/getmes");
+const getBrn = () => API_URL.get("/getbrn");
 
 const addProduct = (productData) => API_URL.post("/addproduct", productData);
 const createSales = (payload) => API_URL.post("/createsales", payload);
@@ -76,6 +79,9 @@ const userAPI = {
   topProducts,
   lowProducts,
   almostExpired,
+  getType,
+  getMes,
+  getBrn,
 };
 
 export default userAPI;

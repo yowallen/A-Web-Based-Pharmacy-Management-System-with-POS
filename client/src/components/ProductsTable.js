@@ -1,6 +1,6 @@
 import DataTable from "react-data-table-component";
-import {TbCurrencyPeso} from "react-icons/tb";
-import {BiSearchAlt} from "react-icons/bi";
+import { TbCurrencyPeso } from "react-icons/tb";
+import { BiSearchAlt } from "react-icons/bi";
 
 export default function ProductsTable({
   data,
@@ -32,7 +32,7 @@ export default function ProductsTable({
 
   const applyConditionalStyles = (row) => {
     if (row.quantity <= row.productLimit) {
-      return {backgroundColor: "yellow"};
+      return { backgroundColor: "yellow" };
     }
     return null;
   };
@@ -70,6 +70,11 @@ export default function ProductsTable({
             </div>
           </div>
         ),
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
     },
 
     {

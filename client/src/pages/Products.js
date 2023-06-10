@@ -1,10 +1,11 @@
-import {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {toast} from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
-import {addProduct, getCategories, getProducts} from "../features/userSlice";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { addProduct, getCategories, getProducts } from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
+import { TbBrandAmd } from "react-icons/tb";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function Products() {
     quantity: 0,
     productLimit: 0,
     cost: 0,
+    brand: "",
   });
 
   const {
@@ -37,15 +39,18 @@ export default function Products() {
     quantity,
     productLimit,
     cost,
+    brand,
   } = productData;
 
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getCategories());
     dispatch(getProducts());
-  }, [dispatch, addProduct, getCategories]);
+  }, [dispatch, addProduct, getCategories, onsubmit]);
 
-  const {user, categories, products} = useSelector((state) => state.user);
+  const { user, categories, products, types, mes, brn } = useSelector(
+    (state) => state.user
+  );
 
   const onChange = (e) => {
     setProductData({
@@ -63,7 +68,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({productData, toast}));
+    dispatch(addProduct({ productData, toast }));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -79,23 +84,46 @@ export default function Products() {
       cost: 0,
     });
     dispatch(getCategories());
+    dispatch(getProducts());
   };
 
   const [search, setSearch] = useState("");
-  const filteredProducts = products.filter((category) => {
-    if (search === "") {
-      return true; // Render all categories when search is empty
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState("");
+
+  const filteredProducts = products.filter((product) => {
+    if (search !== "") {
+      const productName = product.productName.toLowerCase();
+      const searchInput = search.toLowerCase();
+
+      if (!productName.startsWith(searchInput)) {
+        const words = productName.split(" ");
+        if (!words.some((word) => word === searchInput)) {
+          return false;
+        }
+      }
     }
 
-    const categoryName = category.productName.toLowerCase();
-    const searchInput = search.toLowerCase();
-
-    if (categoryName.startsWith(searchInput)) {
-      return true; // Match if category name starts with the search input
+    // Apply dropdown filters
+    if (selectedCategory && product.category !== selectedCategory) {
+      return false;
     }
 
-    const words = categoryName.split(" ");
-    return words.some((word) => word === searchInput); // Match if any word in category name is equal to the search input
+    if (selectedType && product.productType !== selectedType) {
+      return false;
+    }
+
+    if (selectedBrand && product.brand !== selectedBrand) {
+      return false;
+    }
+
+    if (selectedUnit && product.measurement !== selectedUnit) {
+      return false;
+    }
+
+    return true; // Include the product if all filters pass
   });
 
   const label = "flex text-base font-mont font-medium pt-2";
@@ -123,6 +151,62 @@ export default function Products() {
           + Add Product
         </button>
       </div>
+      <div className="flex gap-5">
+        {/* Dropdown filters */}
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category.categoryName}>
+              {category.categoryName}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+        >
+          <option value="">All Types</option>
+          {[...new Set(products.map((product) => product.productType))].map(
+            (type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            )
+          )}
+        </select>
+
+        <select
+          value={selectedBrand}
+          onChange={(e) => setSelectedBrand(e.target.value)}
+        >
+          <option value="">All Brands</option>
+          {[...new Set(products.map((product) => product.brand))].map(
+            (brand) => (
+              <option key={brand} value={brand}>
+                {brand}
+              </option>
+            )
+          )}
+        </select>
+
+        <select
+          value={selectedUnit}
+          onChange={(e) => setSelectedUnit(e.target.value)}
+        >
+          <option value="">All Units</option>
+          {[...new Set(products.map((product) => product.measurement))].map(
+            (unit) => (
+              <option key={unit} value={unit}>
+                {unit}
+              </option>
+            )
+          )}
+        </select>
+      </div>
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-screen">
@@ -149,6 +233,18 @@ export default function Products() {
                     </div>
 
                     <div className="flex-col">
+                      <label className={label}>Brand:</label>
+                      <input
+                        type="text"
+                        className={input}
+                        placeholder="Enter name of brand"
+                        name="brand"
+                        value={brand}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </div>
+
+                    <div className="flex-col">
                       <label className={label}>Product Category:</label>
                       <select
                         className={input}
@@ -170,14 +266,7 @@ export default function Products() {
 
                     <div className="flex-col">
                       <label className={label}>Product Type:</label>
-                      {/* <input
-                        type="text"
-                        className={input}
-                        placeholder="Enter type of product"
-                        name="productType"
-                        value={productType}
-                        onChange={(e) => onChange(e)}
-                      /> */}
+
                       <select
                         name="productType"
                         id=""

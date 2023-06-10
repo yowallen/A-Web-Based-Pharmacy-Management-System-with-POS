@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {updateProduct} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateProduct } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 
-const UpdateProduct = ({product, categories, user}) => {
+const UpdateProduct = ({ product, categories, user }) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -14,6 +14,7 @@ const UpdateProduct = ({product, categories, user}) => {
     price: product.price,
     expiryDate: product.expiryDate,
     description: product.description,
+    brand: product.brand,
     prescriptionRequired: product.prescriptionRequired,
     productLimit: product.productLimit,
     cost: product.cost,
@@ -31,6 +32,7 @@ const UpdateProduct = ({product, categories, user}) => {
     prescriptionRequired,
     productLimit,
     cost,
+    brand,
   } = productData;
 
   const handleChange = (e) => {
@@ -86,6 +88,21 @@ const UpdateProduct = ({product, categories, user}) => {
             value={productName}
             onChange={handleChange}
             name="productName"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
+          />
+
+          <label
+            htmlFor="brand"
+            className="font-semibold text-gray-700 text-md"
+          >
+            Bramd:
+          </label>
+          <input
+            type="text"
+            id="brand"
+            value={brand}
+            onChange={handleChange}
+            name="brand"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
 
