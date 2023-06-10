@@ -21,12 +21,21 @@ import {
 } from "../features/userSlice";
 import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {RiAlarmWarningLine} from "react-icons/ri";
+import {IoWarningOutline} from "react-icons/io5";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {salesToday, salesCountToday, productsCount, user, products} =
-    useSelector((state) => state.user);
+  const {
+    salesToday,
+    salesCountToday,
+    productsCount,
+    user,
+    products,
+    lowProduct,
+    almostExpired,
+  } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -89,23 +98,67 @@ export default function Dashboard() {
             </div>
           </div>
 
+          <div className="flex gap-x-8">
+            <div className="shadow-xl basis-1/2">
+              <div className={`${card} bg-purple-400 rounded-t-xl`}>
+                <span>New Deliveries</span>
+                <p className="flex items-center text-lg gap-x-2">
+                  <p>Recent:</p>
+                  {products.length &&
+                    `${products[0].productName} (${products[0].quantity})`}
+                </p>
+                <span className="flex justify-end">
+                  <HiTemplate
+                    className="text-purple-600"
+                    style={{fontSize: "6rem"}}
+                  />
+                </span>
+              </div>
+              <div className="bg-purple-600 font-normal text-base rounded-b-xl">
+                <Link to="/new">
+                  <div className="flex items-center justify-center gap-x-2">
+                    <span>More Info</span>
+                    <FaArrowCircleRight />
+                  </div>
+                </Link>
+              </div>
+            </div>
+
+            <div className="shadow-xl basis-1/2">
+              <div className={`${card} bg-sky-500 rounded-t-xl`}>
+                <span>Total Products</span>
+                <p className="flex items-center gap-x-2">
+                  {productsCount} <p className="text-base">products</p>
+                </p>
+                <span className="flex justify-end">
+                  <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
+                </span>
+              </div>
+              <div className="bg-sky-700 font-normal text-base rounded-b-xl">
+                <Link to="inventory">
+                  <div className="flex items-center justify-center gap-x-2">
+                    <span>More Info</span>
+                    <FaArrowCircleRight />
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col text-ter gap-y-8 basis-1/3">
           <div className="shadow-xl">
-            <div className={`${card} bg-purple-400 rounded-t-xl`}>
-              <span>New Deliveries</span>
-              <p className="flex items-center text-lg gap-x-2">
-                <p>Recent:</p>
-                {products.length &&
-                  `${products[0].productName} (${products[0].quantity})`}
+            <div className={`${card} bg-prime rounded-t-xl flex flex-col`}>
+              <span>Low on Stock</span>
+              <p className="rounded-full w-8 h-8 items-center justify-center inline-flex bg-red-500">
+                {lowProduct.length}
               </p>
               <span className="flex justify-end">
-                <HiTemplate
-                  className="text-purple-600"
-                  style={{fontSize: "6rem"}}
-                />
+                <IoWarningOutline className="text-[4rem] mt-8 text-sec" />
               </span>
             </div>
-            <div className="bg-purple-600 font-normal text-base rounded-b-xl">
-              <Link to="/new">
+            <div className="bg-sec font-normal text-base rounded-b-xl">
+              <Link to="/low">
                 <div className="flex items-center justify-center gap-x-2">
                   <span>More Info</span>
                   <FaArrowCircleRight />
@@ -113,21 +166,19 @@ export default function Dashboard() {
               </Link>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col text-ter gap-y-8 basis-1/3">
           <div className="shadow-xl">
-            <div className={`${card} bg-sky-500 rounded-t-xl`}>
-              <span>Total Products</span>
-              <p className="flex items-center gap-x-2">
-                {productsCount} <p className="text-base">products</p>
+            <div className={`${card} bg-prime rounded-t-xl flex flex-col`}>
+              <span>Nearly Expired</span>
+              <p className="rounded-full w-8 h-8 items-center justify-center inline-flex bg-red-500">
+                {almostExpired.length}
               </p>
               <span className="flex justify-end">
-                <FaShoppingBag style={{fontSize: "6rem", color: "#0369a1"}} />
+                <RiAlarmWarningLine className="text-[4rem] mt-8 text-sec" />
               </span>
             </div>
-            <div className="bg-sky-700 font-normal text-base rounded-b-xl">
-              <Link to="inventory">
+            <div className="bg-sec font-normal text-base rounded-b-xl">
+              <Link to="/expired">
                 <div className="flex items-center justify-center gap-x-2">
                   <span>More Info</span>
                   <FaArrowCircleRight />

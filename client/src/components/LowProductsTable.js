@@ -3,6 +3,8 @@ import DataTable from "react-data-table-component";
 import {BiSearchAlt} from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import {FaCaretRight} from "react-icons/fa";
+import {Link} from "react-router-dom";
 
 const LowProductsTable = ({data, search, setSearch}) => {
   const customStyles = {
@@ -120,7 +122,15 @@ const LowProductsTable = ({data, search, setSearch}) => {
 
   return (
     <div>
-      <h1 className="pb-5">List of Low on Stock Products</h1>
+      <h1 className="font-mont flex items-center">
+        <Link className="hover:underline" to="/">
+          Dashboard
+        </Link>{" "}
+        <span>
+          <FaCaretRight />
+        </span>
+        Total Orders
+      </h1>
       <div ref={tableRef}>
         <DataTable
           columns={columns}
