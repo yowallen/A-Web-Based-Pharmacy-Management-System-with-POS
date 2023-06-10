@@ -86,11 +86,7 @@ export default function ProductsTable({
       selector: (row) => row.measurement,
       sortable: true,
     },
-    {
-      name: "Stocks",
-      selector: (row) => row.quantity,
-      sortable: true,
-    },
+
     {
       name: "Category",
       selector: (row) => row.category,
@@ -102,12 +98,8 @@ export default function ProductsTable({
       sortable: true,
     },
     {
-      name: "Price",
-      cell: (row) => (
-        <span className="flex items-center">
-          <TbCurrencyPeso /> {row.price}
-        </span>
-      ),
+      name: "Stocks",
+      selector: (row) => row.quantity,
       sortable: true,
     },
     {
@@ -115,6 +107,15 @@ export default function ProductsTable({
       cell: (row) => (
         <span className="flex items-center">
           <TbCurrencyPeso /> {row.cost}
+        </span>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Price",
+      cell: (row) => (
+        <span className="flex items-center">
+          <TbCurrencyPeso /> {row.price}
         </span>
       ),
       sortable: true,

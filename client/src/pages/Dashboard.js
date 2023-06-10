@@ -102,8 +102,8 @@ export default function Dashboard() {
             <div className="shadow-xl basis-1/2">
               <div className={`${card} bg-purple-400 rounded-t-xl`}>
                 <span>New Deliveries</span>
-                <p className="flex items-center text-lg gap-x-2">
-                  <p>Recent:</p>
+                <p className="flex items-center text-sm gap-x-2">
+                  <p className="text-lg">Recent:</p>
                   {products.length &&
                     `${products[0].productName} (${products[0].quantity})`}
                 </p>

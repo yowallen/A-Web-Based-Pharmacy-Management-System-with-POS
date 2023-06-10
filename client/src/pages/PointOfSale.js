@@ -52,6 +52,8 @@ export default function PointOfSale() {
         price: product.price,
         cost: product.cost,
         quantity: product.quantity,
+        brand: product.brand,
+        measurement: product.measurement,
       },
       label: `${product.productName}: onHand(${product.quantity})`,
     }));
@@ -98,6 +100,8 @@ export default function PointOfSale() {
           cost: value.cost,
           quantity: parseInt(quantityValue),
           stocks: value.quantity,
+          brand: value.brand,
+          measurement: value.measurement,
         };
 
         setDisplayProducts([...displayProducts, newProduct]);
@@ -301,6 +305,8 @@ export default function PointOfSale() {
                 <tr className="text-white text-lg">
                   <th className="tracking-wide">Amount</th>
                   <th className="tracking-wide">Product</th>
+                  <th className="tracking-wide">Brand</th>
+                  <th className="tracking-wide">Unit</th>
                   <th className="tracking-wide">Price</th>
                   <th className="tracking-wide">Qty</th>
                   <th className="tracking-wide">Edit Quantity</th>{" "}
@@ -316,6 +322,8 @@ export default function PointOfSale() {
                         {product.price * product.quantity}
                       </td>
                       <td className="p-3">{product.product}</td>
+                      <td className="p-3">{product.brand}</td>
+                      <td className="p-3">{product.measurement}</td>
                       <td className="p-3 flex items-center justify-center">
                         <TbCurrencyPeso />
                         {product.price}
@@ -432,20 +440,22 @@ export default function PointOfSale() {
               </button>
             </div>
           </div>
-          <span className=" text-gray-500 mt-2 flex justify-between">
-            <span className="text-base border-2 border-prime px-2 py-1 rounded text-prime flex items-center">
-              Discounted:
-              <strong className="text-lg pl-1 flex items-center">
-                <TbCurrencyPeso />
-                {calculatedDiscount.toFixed(2)}
-              </strong>
-            </span>
-            <button
-              onClick={calculateDiscount}
-              className="text-base bg-prime text-white py-2 px-4 rounded hover:bg-sky-500 mr-2"
-            >
-              Calculate Discount
-            </button>
+          <span className=" text-gray-500 mt-2 flex flex-col">
+            <div className="flex justify-between">
+              <span className="text-base border-2 border-prime px-2 py-1 rounded text-prime flex items-center">
+                Discounted:
+                <strong className="text-lg pl-1 flex items-center">
+                  <TbCurrencyPeso />
+                  {calculatedDiscount.toFixed(2)}
+                </strong>
+              </span>
+              <button
+                onClick={calculateDiscount}
+                className="text-base bg-prime text-white py-2 px-4 rounded hover:bg-sky-500"
+              >
+                Calculate Discount
+              </button>
+            </div>
           </span>
         </div>
       </div>

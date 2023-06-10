@@ -5,7 +5,6 @@ import {useNavigate} from "react-router-dom";
 import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
-import {TbBrandAmd} from "react-icons/tb";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -34,7 +33,6 @@ export default function Products() {
     productType,
     measurement,
     price,
-    description,
     expiryDate,
     prescriptionRequired,
     quantity,
@@ -147,7 +145,7 @@ export default function Products() {
   return (
     <div className="max-w-full h-full">
       <div className="flex items-center justify-between">
-        <h1 className="font-mont font-bold">Product List</h1>
+        <h1 className="font-mont font-bold">Inventory List</h1>
         <button
           className="bg-emerald-500 text-white hover:bg-emerald-400 font-bold uppercase text-sm px-6 py-3 rounded"
           type="button"
@@ -310,7 +308,7 @@ export default function Products() {
                         <option value="Drops">Drops</option>
                         <option value="Injection">Injection</option>
                         <option value="Nebule">Nebule</option>
-                        <option value="Suspension">Suspension</option>
+                        <option value="Suspension">Suppositories</option>
                         <option value="Syrup">Syrup</option>
                         <option value="Tablet">Tablet</option>
                       </select>

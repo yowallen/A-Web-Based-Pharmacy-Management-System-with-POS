@@ -86,20 +86,20 @@ export default function Root() {
             </NavLink>
 
             <NavLink className={navLink} to="products">
-              <FaPrescriptionBottleAlt style={iconStyle} />
-              <span
-                className={`${!openNav && "hidden"} origin-left duration-200`}
-              >
-                Manage Products
-              </span>
-            </NavLink>
-
-            <NavLink className={navLink} to="inventory">
               <FaBox style={iconStyle} />
               <span
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
                 Inventory
+              </span>
+            </NavLink>
+
+            <NavLink className={navLink} to="inventory">
+              <FaPrescriptionBottleAlt style={iconStyle} />
+              <span
+                className={`${!openNav && "hidden"} origin-left duration-200`}
+              >
+                Manage Products
               </span>
             </NavLink>
 
