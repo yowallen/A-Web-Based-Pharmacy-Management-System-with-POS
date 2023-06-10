@@ -72,7 +72,6 @@ const InventoryTable = ({data, search, setSearch}) => {
   ];
   return (
     <div>
-      <h1 className="pb-5">Product List</h1>
       <DataTable
         columns={columns}
         data={data}

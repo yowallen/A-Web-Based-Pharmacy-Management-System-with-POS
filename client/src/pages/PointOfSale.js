@@ -219,7 +219,7 @@ export default function PointOfSale() {
   useEffect(() => {
     if (!user) navigate("/login");
     dispatch(getProducts());
-  }, [dispatch, navigate, payProducts, getProducts]);
+  }, [dispatch, navigate, payProducts, user]);
 
   const calculateTotalValue = () => {
     const total = displayProducts.reduce(
