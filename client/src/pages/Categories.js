@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {addCategory, getCategories} from "../features/userSlice";
-import {toast} from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addCategory, getCategories } from "../features/userSlice";
+import { toast } from "react-hot-toast";
 import DeleteCategoryButton from "../components/DeleteCategoryButton";
-import {FiEdit} from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import UpdateCategoryForm from "../components/UpdateCategoryForm";
 
 import CategoryTable from "../components/CategoryTable";
@@ -18,9 +18,9 @@ export default function Categories() {
     categoryDescription: "",
   });
 
-  const {categoryName, categoryDescription} = categoryData;
+  const { categoryName, categoryDescription } = categoryData;
 
-  const {categories, user} = useSelector((state) => state.user);
+  const { categories, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -28,12 +28,12 @@ export default function Categories() {
   }, [navigate, dispatch, addCategory, getCategories]);
 
   const onChange = (e) => {
-    setCategoryData({...categoryData, [e.target.name]: e.target.value});
+    setCategoryData({ ...categoryData, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addCategory({categoryData, toast}));
+    dispatch(addCategory({ categoryData, toast }));
     setCategoryData({
       categoryName: "",
       categoryDescription: "",
@@ -131,12 +131,13 @@ export default function Categories() {
                         rows="5"
                         className={input}
                         placeholder="Enter description"
-                        style={{resize: "none"}}
+                        style={{ resize: "none" }}
                         name="categoryDescription"
                         value={categoryDescription}
                         onChange={(e) => onChange(e)}
                       ></textarea>
                     </div>
+
                     <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                       <button
                         className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

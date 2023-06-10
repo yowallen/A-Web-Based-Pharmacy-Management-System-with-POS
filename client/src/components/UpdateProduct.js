@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateProduct } from "../features/userSlice";
-import { toast } from "react-hot-toast";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {updateProduct} from "../features/userSlice";
+import {toast} from "react-hot-toast";
 
-const UpdateProduct = ({ product, categories, user }) => {
+const UpdateProduct = ({product, categories, user}) => {
   const dispatch = useDispatch();
   const [productData, setProductData] = useState({
     productName: product.productName,
@@ -15,6 +15,7 @@ const UpdateProduct = ({ product, categories, user }) => {
     expiryDate: product.expiryDate,
     description: product.description,
     brand: product.brand,
+    supplier: product.supplier,
     prescriptionRequired: product.prescriptionRequired,
     productLimit: product.productLimit,
     cost: product.cost,
@@ -33,6 +34,7 @@ const UpdateProduct = ({ product, categories, user }) => {
     productLimit,
     cost,
     brand,
+    supplier,
   } = productData;
 
   const handleChange = (e) => {
@@ -57,13 +59,6 @@ const UpdateProduct = ({ product, categories, user }) => {
   const input =
     "w-full text-sm font-normal p-1 border-2 border-sec border-opacity-50 focus:border-prime focus:outline-none rounded";
   const label = "flex text-base font-mont font-medium pt-2";
-
-  const handleClearDate = () => {
-    setProductData({
-      ...productData,
-      expiryDate: "", // Clear the expiry date value
-    });
-  };
 
   const formattedExpiryDate = expiryDate
     ? new Date(expiryDate).toISOString().slice(0, 10)
@@ -95,7 +90,7 @@ const UpdateProduct = ({ product, categories, user }) => {
             htmlFor="brand"
             className="font-semibold text-gray-700 text-md"
           >
-            Bramd:
+            Brand:
           </label>
           <input
             type="text"
@@ -103,6 +98,21 @@ const UpdateProduct = ({ product, categories, user }) => {
             value={brand}
             onChange={handleChange}
             name="brand"
+            className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
+          />
+
+          <label
+            htmlFor="supplier"
+            className="font-semibold text-gray-700 text-md"
+          >
+            Supplier:
+          </label>
+          <input
+            type="text"
+            id="supplier"
+            value={supplier}
+            onChange={handleChange}
+            name="supplier"
             className="border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-normal"
           />
 

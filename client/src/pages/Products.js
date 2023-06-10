@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { addProduct, getCategories, getProducts } from "../features/userSlice";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {addProduct, getCategories, getProducts} from "../features/userSlice";
 import UpdateProduct from "../components/UpdateProduct";
 import DataTable from "../components/ProductsTable";
-import { TbBrandAmd } from "react-icons/tb";
+import {TbBrandAmd} from "react-icons/tb";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ export default function Products() {
     productLimit: 0,
     cost: 0,
     brand: "",
+    supplier: "",
   });
 
   const {
@@ -40,6 +41,7 @@ export default function Products() {
     productLimit,
     cost,
     brand,
+    supplier,
   } = productData;
 
   useEffect(() => {
@@ -48,9 +50,7 @@ export default function Products() {
     dispatch(getProducts());
   }, [dispatch, addProduct, getCategories, onsubmit]);
 
-  const { user, categories, products, types, mes, brn } = useSelector(
-    (state) => state.user
-  );
+  const {user, categories, products} = useSelector((state) => state.user);
 
   const onChange = (e) => {
     setProductData({
@@ -68,7 +68,7 @@ export default function Products() {
       );
       return;
     }
-    dispatch(addProduct({ productData, toast }));
+    dispatch(addProduct({productData, toast}));
     setShowModal(false);
     setProductData({
       productName: "",
@@ -82,6 +82,8 @@ export default function Products() {
       quantity: 0,
       productLimit: 0,
       cost: 0,
+      brand: "",
+      supplier: "",
     });
     dispatch(getCategories());
     dispatch(getProducts());
@@ -92,6 +94,7 @@ export default function Products() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
 
   const filteredProducts = products.filter((product) => {
     if (search !== "") {
@@ -122,7 +125,9 @@ export default function Products() {
     if (selectedUnit && product.measurement !== selectedUnit) {
       return false;
     }
-
+    if (selectedSupplier && product.supplier !== selectedSupplier) {
+      return false;
+    }
     return true; // Include the product if all filters pass
   });
 
@@ -194,6 +199,20 @@ export default function Products() {
         </select>
 
         <select
+          value={selectedSupplier}
+          onChange={(e) => setSelectedSupplier(e.target.value)}
+        >
+          <option value="">All Supplier</option>
+          {[...new Set(products.map((product) => product.supplier))].map(
+            (supp) => (
+              <option key={supp} value={supp}>
+                {supp}
+              </option>
+            )
+          )}
+        </select>
+
+        <select
           value={selectedUnit}
           onChange={(e) => setSelectedUnit(e.target.value)}
         >
@@ -240,6 +259,18 @@ export default function Products() {
                         placeholder="Enter name of brand"
                         name="brand"
                         value={brand}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </div>
+
+                    <div className="flex-col">
+                      <label className={label}>Supplier:</label>
+                      <input
+                        type="text"
+                        className={input}
+                        placeholder="Enter name of supplier"
+                        name="supplier"
+                        value={supplier}
                         onChange={(e) => onChange(e)}
                       />
                     </div>
