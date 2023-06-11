@@ -68,9 +68,6 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                             PRODUCT:
                           </th>
                           <th className="tracking-wide font-light pr-2">
-                            BRAND:
-                          </th>
-                          <th className="tracking-wide font-light pr-2">
                             PRICE:
                           </th>
                           <th className="tracking-wide font-light pr-2">
@@ -90,9 +87,6 @@ const Reciept = ({sale, closeModal, cash, isDiscounted}) => {
                             >
                               <td className="border-b border-gray-200 p-1">
                                 {sale.product}
-                              </td>
-                              <td className="border-b border-gray-200 p-1">
-                                {sale.brand}
                               </td>
                               <td className="border-b border-gray-200 p-1">
                                 {sale.price}

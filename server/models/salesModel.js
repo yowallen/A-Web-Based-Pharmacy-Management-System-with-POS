@@ -5,9 +5,6 @@ const salesSchema = new mongoose.Schema(
     product: {
       type: String,
     },
-    brand: {
-      type: String,
-    },
     quantity: {
       type: Number,
       required: true,
@@ -19,9 +16,11 @@ const salesSchema = new mongoose.Schema(
     soldBy: {
       type: String,
     },
+
     cost: {
       type: Number,
     },
+
     totalEarnings: {
       type: Number,
     },
