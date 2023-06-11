@@ -17,8 +17,6 @@ export default function TotalOrders() {
 
   const {user, salesHistoryToday} = useSelector((state) => state.user);
 
-  console.log(salesHistoryToday);
-
   return (
     <div>
       <h1 className="font-mont flex items-center">

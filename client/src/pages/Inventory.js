@@ -48,8 +48,6 @@ export default function Inventory() {
     dispatch(getCategories());
   }, [dispatch, navigate, user]);
 
-  console.log(products);
-
   const onChange = (e) => {
     setProductData({
       ...productData,

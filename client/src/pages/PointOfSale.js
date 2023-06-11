@@ -257,8 +257,6 @@ export default function PointOfSale() {
     setTotal(newTotal);
   };
 
-  console.log(displayProducts);
-
   return (
     <div className="w-full">
       <h1 className="font-mont">Sales</h1>

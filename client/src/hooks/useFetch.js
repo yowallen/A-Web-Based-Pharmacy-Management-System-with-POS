@@ -26,7 +26,6 @@ const useFetch = (url) => {
         } catch (err) {
           if (err.name === "AbortError") {
             console.log("Fetching was Aborted");
-            console.log(err);
           } else {
             setIsPending(false);
             setError("No data found");
