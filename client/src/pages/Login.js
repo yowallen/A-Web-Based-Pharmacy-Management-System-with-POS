@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "../features/userSlice";
+import React, {useEffect, useState} from "react";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {userLogin} from "../features/userSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -13,17 +13,17 @@ export default function Login() {
     password: "",
   });
 
-  const { userName, password } = userData;
+  const {userName, password} = userData;
 
-  const { user } = useSelector((state) => state.user);
+  const {user} = useSelector((state) => state.user);
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setUserData({...userData, [e.target.name]: e.target.value});
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(userLogin({ userData, navigate, toast }));
+    dispatch(userLogin({userData, navigate, toast}));
   };
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Login() {
 
   return (
     <div className="login flex justify-center items-center w-full h-screen">
-      <section className="w-7/12 h-4/6 shadow-2xl rounded-lg px-14 py-4 bg-white">
+      <section className="w-7/12 h-auto shadow-2xl rounded-lg px-14 py-4 bg-white">
         <div className="text-center">
           <h2 className="font-lob text-3xl my-5 text-prime">
             Corisoto's <br /> Pharmacy
