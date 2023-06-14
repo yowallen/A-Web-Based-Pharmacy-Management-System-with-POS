@@ -8,7 +8,7 @@ import {
   FaUsers,
   FaList,
   FaExclamationTriangle,
-  FaCoins,
+  FaCashRegister,
 } from "react-icons/fa";
 import {useEffect, useState} from "react";
 import {Outlet, NavLink} from "react-router-dom";
@@ -66,7 +66,15 @@ export default function Root() {
               {user && user.fullName} ({user && user.role})
             </h1>
           </div>
-          <div className={`my-48 ${!openNav && ""}`}>
+          <NavLink className={`${navLink} mt-24 border-2`} to="pos">
+            <FaCashRegister style={iconStyle} />
+            <span
+              className={`${!openNav && "hidden"} origin-left duration-200`}
+            >
+              Point of Sale
+            </span>
+          </NavLink>
+          <div className={`my-16 ${!openNav && ""}`}>
             <NavLink className={navLink} to="/">
               <FaThLarge style={iconStyle} />
               <span
@@ -100,15 +108,6 @@ export default function Root() {
                 className={`${!openNav && "hidden"} origin-left duration-200`}
               >
                 Manage Products
-              </span>
-            </NavLink>
-
-            <NavLink className={navLink} to="pos">
-              <FaCoins style={iconStyle} />
-              <span
-                className={`${!openNav && "hidden"} origin-left duration-200`}
-              >
-                Sales
               </span>
             </NavLink>
 
