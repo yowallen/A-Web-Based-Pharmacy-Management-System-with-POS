@@ -74,7 +74,7 @@ export default function Root() {
               Point of Sale
             </span>
           </NavLink>
-          <div className={`my-16 ${!openNav && ""}`}>
+          <div className={`my-32 ${!openNav && ""}`}>
             <NavLink className={navLink} to="/">
               <FaThLarge style={iconStyle} />
               <span

@@ -48,6 +48,7 @@ export default function History() {
     );
 
     const rows = [
+      ["", "", "SALES HISTORY", "", `Total Earnings: ${total.toString()}`], // Header title
       ["Date", "Product", "Sale", "Costing", "Earnings", "Sold by"],
       ...sortedSalesHistory.map((sale) => [
         new Date(sale.createdAt).toLocaleDateString(),
@@ -57,7 +58,6 @@ export default function History() {
         sale.total - sale.cost,
         sale.soldBy,
       ]),
-      ["Total", "", total.toString(), ""],
     ];
 
     const filename = "sales_history";
